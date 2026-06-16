@@ -440,7 +440,7 @@
                         <p class="text-gray-400 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">Unlock advanced player statistics, pitch reports, and expert predictions for all active matches.</p>
                     </div>
                 </div>
-                <a href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')" class="px-8 py-4 bg-[#00FF87] hover:bg-[#00D670] text-black font-black text-xs md:text-sm uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-emerald-500/10 shrink-0 flex items-center gap-2">
+                <a href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')" class="px-8 py-4 bg-[#00FF87] hover:bg-[#00D670] text-black font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-emerald-500/10 shrink-0 flex items-center gap-2">
                     <span>Get Predictions</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
@@ -546,26 +546,38 @@
                 </div>
             </div>
 
-            <!-- Live Broadcasts Section -->
-            <div class="space-y-4">
-                <div class="flex items-center gap-2 border-b border-white/5 pb-2">
-                    <i data-lucide="play" class="w-5 h-5 text-[#FF003C] animate-pulse"></i>
-                    <h2 class="text-xl font-black uppercase tracking-wide">Live Broadcasts</h2>
+            <!-- Content Wrapper (Hidden/Shown dynamically to resolve state lock bug) -->
+            <div id="sport-details-content-wrapper" class="space-y-8">
+                <!-- Live Broadcasts Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 border-b border-white/5 pb-2">
+                        <i data-lucide="play" class="w-5 h-5 text-[#FF003C] animate-pulse"></i>
+                        <h2 class="text-xl font-black uppercase tracking-wide">Live Broadcasts</h2>
+                    </div>
+                    <div id="sport-details-live-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Live match cards inside sport -->
+                    </div>
                 </div>
-                <div id="sport-details-live-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Live match cards inside sport -->
+
+                <!-- Scheduled Matches Section -->
+                <div class="space-y-4 pt-4">
+                    <div class="flex items-center gap-2 border-b border-white/5 pb-2">
+                        <i data-lucide="calendar" class="w-5 h-5 text-[#00FF87]"></i>
+                        <h2 class="text-xl font-black uppercase tracking-wide">Scheduled Matches</h2>
+                    </div>
+                    <div id="sport-details-upcoming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Upcoming match cards inside sport -->
+                    </div>
                 </div>
             </div>
 
-            <!-- Scheduled Matches Section -->
-            <div class="space-y-4 pt-4">
-                <div class="flex items-center gap-2 border-b border-white/5 pb-2">
-                    <i data-lucide="calendar" class="w-5 h-5 text-[#00FF87]"></i>
-                    <h2 class="text-xl font-black uppercase tracking-wide">Scheduled Matches</h2>
+            <!-- Clean fallback empty state container -->
+            <div id="sport-details-empty-state" class="hidden flex flex-col items-center justify-center text-center p-12 bg-[#111827] rounded-3xl border border-white/5 gap-4 shadow-2xl w-full my-6">
+                <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-gray-400 shrink-0">
+                    <i data-lucide="calendar-x" class="w-8 h-8"></i>
                 </div>
-                <div id="sport-details-upcoming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Upcoming match cards inside sport -->
-                </div>
+                <h3 class="text-lg font-black uppercase text-white tracking-wider">No Match Currently Available</h3>
+                <p class="text-sm text-gray-400 max-w-sm">No live or scheduled upcoming matches currently available for this category. Stay tuned for future schedule updates.</p>
             </div>
         </div>
 
@@ -608,6 +620,110 @@
                 </div>
                 <div id="video-player-related-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Clickable live cards populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 8: ROUTED PREDICTIONS DETAIL VIEW -->
+        <div id="prediction-details-view" class="page-view hidden space-y-8">
+            <!-- Back Link -->
+            <div>
+                <button onclick="navigateToRoute(event, '#/sports/prediction')" class="flex items-center gap-2 text-gray-400 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Predictions</span>
+                </button>
+            </div>
+
+            <!-- Sport Category and Match Title Card -->
+            <div class="space-y-3">
+                <span id="pred-details-category" class="text-[10px] font-black uppercase text-[#FF003C] bg-[#FF003C]/10 px-3 py-1 rounded-full tracking-wider inline-block">Category</span>
+                <h1 id="pred-details-match-title" class="text-2xl md:text-3xl font-black text-white leading-tight uppercase">Germany vs Curaçao | FIFA World Cup</h1>
+            </div>
+
+            <!-- Teams Comparison Block -->
+            <div class="bg-[#111827] border border-white/5 rounded-3xl p-6 md:p-8 flex items-center justify-between shadow-2xl relative overflow-hidden">
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/5 p-3 border border-white/10 flex items-center justify-center shadow-lg">
+                        <img id="pred-details-t1-logo" referrerpolicy="no-referrer" src="" alt="Team 1" class="w-full h-full object-contain"/>
+                    </div>
+                    <span id="pred-details-t1-name" class="text-sm md:text-base font-black text-white uppercase tracking-wider text-center line-clamp-1">Germany</span>
+                </div>
+                <div class="mx-4 flex flex-col items-center justify-center shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-[#15212D] border border-white/10 flex items-center justify-center shadow-inner">
+                        <span class="text-xs font-black italic text-gray-400 uppercase tracking-widest">VS</span>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/5 p-3 border border-white/10 flex items-center justify-center shadow-lg">
+                        <img id="pred-details-t2-logo" referrerpolicy="no-referrer" src="" alt="Team 2" class="w-full h-full object-contain"/>
+                    </div>
+                    <span id="pred-details-t2-name" class="text-sm md:text-base font-black text-white uppercase tracking-wider text-center line-clamp-1">Curaçao</span>
+                </div>
+            </div>
+
+            <!-- Detailed Comparison Table (Metrics) -->
+            <div class="bg-[#15212D]/60 border border-white/5 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
+                <div class="flex items-center gap-2 border-b border-white/5 pb-3">
+                    <i data-lucide="grid-3x3" class="w-5 h-5 text-blue-400"></i>
+                    <h3 class="text-lg font-black uppercase tracking-wide">Detailed Comparison Table</h3>
+                </div>
+                
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="text-left text-[11px] font-black text-gray-400 uppercase tracking-widest border-b border-white/5">
+                                <th class="pb-3 w-1/3">Category</th>
+                                <th class="pb-3 w-1/3 text-center" id="pred-details-table-t1-name">Team A</th>
+                                <th class="pb-3 w-1/3 text-center" id="pred-details-table-t2-name">Team B</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pred-details-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Legend Indicator -->
+                <div class="flex flex-wrap gap-6 pt-2 text-[10px] font-black uppercase tracking-widest text-gray-400 border-t border-white/5 justify-center">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#00FF87]"></span>
+                        <span>Strong Form</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span>Average Form</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#FF003C]"></span>
+                        <span>Weak Form</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expert Analysis and bullet points pointers -->
+            <div class="bg-[#15212D]/60 border border-white/5 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
+                <div class="flex items-center gap-2 border-b border-white/5 pb-3">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-blue-400"></i>
+                    <h3 class="text-lg font-black uppercase tracking-wide">Expert Analysis & Pointers</h3>
+                </div>
+                <p id="pred-details-description" class="text-gray-300 text-sm md:text-base leading-relaxed"></p>
+                <div class="space-y-4 pt-2">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-[#00FF87]">Key Notes & Tips</h4>
+                    <ul id="pred-details-pointers" class="space-y-3 text-gray-300 text-sm pl-1">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Match Prediction Golden/Trophy Panel Card -->
+            <div class="bg-gradient-to-r from-[#111827] to-[#15212D] border border-amber-500/20 rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl shadow-amber-500/5">
+                <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl"></div>
+                <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-3">
+                    <i data-lucide="trophy" class="w-6 h-6 text-amber-500 shrink-0"></i>
+                    <h3 class="text-lg font-black uppercase tracking-wide text-amber-500">Match Prediction Outcomes</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10" id="pred-details-outcomes-container">
+                    <!-- Populated dynamically via JS -->
                 </div>
             </div>
         </div>
@@ -787,6 +903,24 @@
                 .replace(/\-\-+/g, '-');        
         }
 
+        // Helper function to dynamically draw form status dots matching Screen 1 rating dots
+        function generateRatingDots(status, value) {
+            let dotColorClass = "bg-[#00FF87]"; // Strong Form
+            if (status === "AVERAGE") dotColorClass = "bg-amber-500"; // Average Form
+            if (status === "WEAK") dotColorClass = "bg-[#FF003C]"; // Weak Form
+
+            let dotsHtml = '<div class="flex items-center gap-1 justify-center shrink-0">';
+            for (let i = 1; i <= 10; i++) {
+                if (i <= value) {
+                    dotsHtml += `<span class="w-2.5 h-2.5 rounded-full ${dotColorClass}"></span>`;
+                } else {
+                    dotsHtml += `<span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>`;
+                }
+            }
+            dotsHtml += '</div>';
+            return dotsHtml;
+        }
+
         // Initialize Lucide Icons
         lucide.createIcons();
 
@@ -851,6 +985,10 @@
                 document.getElementById('video-player-view').classList.remove('hidden');
                 const routeParams = path.replace('#/sports/live/', '');
                 renderVideoPlayerPage(routeParams);
+            } else if (path.startsWith('#/sports/prediction/')) {
+                document.getElementById('prediction-details-view').classList.remove('hidden');
+                const predKey = path.replace('#/sports/prediction/', '');
+                renderPredictionDetailsPage(predKey);
             } else if (path === '#/sports/live' || path === '/sports/live' || path === '/live') {
                 document.getElementById('live-view').classList.remove('hidden');
                 updateActiveNavLink('#/sports/live');
@@ -1207,25 +1345,26 @@
             // 3. Render Match Predictions (Homepage)
             const predictionsContainer = document.getElementById('predictions-grid');
             predictionsContainer.innerHTML = '';
-            const predictions = Object.values(data.Prediction || {});
             
-            if (predictions.length === 0) {
+            const predictionEntries = Object.entries(data.Prediction || {});
+            
+            if (predictionEntries.length === 0) {
                 predictionsContainer.innerHTML = `
                     <div class="col-span-full py-8 text-center text-gray-400">
                         No predictions are available at this moment.
                     </div>
                 `;
             } else {
-                predictions.forEach(pred => {
+                predictionEntries.forEach(([predKey, pred]) => {
                     if (pred.visible) {
                         const card = document.createElement('div');
                         card.className = "w-full bg-[#111827] rounded-2xl p-6 shadow-xl border border-white/5 hover:border-white/10 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between min-h-[380px] group relative overflow-hidden";
-                        const predictionJSON = JSON.stringify(pred).replace(/"/g, '&quot;');
+                        const targetRoute = `#/sports/prediction/${predKey}`;
                         const customTitle = `${pred.teams.t1.name} vs ${pred.teams.t2.name} | ${pred.matchTitle}`;
 
                         card.innerHTML = `
                             <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,119,255,0.03),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                            <div class="flex flex-col gap-3 relative z-10">
+                            <div class="flex flex-col gap-3 relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
                                 <div class="flex items-center justify-between">
                                     <span class="text-[10px] font-bold text-[#FF003C] bg-[#FF003C]/10 px-3 py-1 rounded-full uppercase tracking-wider">${pred.category}</span>
                                     ${pred.predictionSettings.enablePrediction ? `
@@ -1239,7 +1378,7 @@
                                     <p class="text-gray-400 text-xs mt-1 font-medium tracking-wide">${pred.subtitle}</p>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-7 items-center justify-center my-6 py-4 px-2 bg-[#0b1220]/40 border border-white/5 rounded-xl relative z-10">
+                            <div class="grid grid-cols-7 items-center justify-center my-6 py-4 px-2 bg-[#0b1220]/40 border border-white/5 rounded-xl relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
                                 <div class="col-span-3 flex flex-col items-center gap-2">
                                     <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/5 p-2.5 border border-white/10 flex items-center justify-center shadow-md">
                                         <img referrerpolicy="no-referrer" src="${pred.teams.t1.logo}" alt="${pred.teams.t1.name}" class="w-full h-full object-contain"/>
@@ -1259,7 +1398,7 @@
                                 </div>
                             </div>
                             <div class="relative z-10 mt-auto">
-                                <button onclick="openPredictionModal(${predictionJSON})" class="w-full bg-[#0077FF] hover:bg-[#0066DD] text-white text-xs sm:text-sm font-bold uppercase tracking-widest py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_14px_rgba(0,119,255,0.25)] focus:outline-none">
+                                <button onclick="navigateToRoute(event, '${targetRoute}')" class="w-full bg-[#0077FF] hover:bg-[#0066DD] text-white text-xs sm:text-sm font-bold uppercase tracking-widest py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_14px_rgba(0,119,255,0.25)] focus:outline-none">
                                     <span>Get Prediction</span>
                                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                 </button>
@@ -1532,6 +1671,8 @@
             const cardsGrid = document.getElementById('prediction-view-cards-grid');
             cardsGrid.innerHTML = '';
 
+            const predictionEntries = Object.entries(globalData.Prediction || {});
+
             if (filteredPredictions.length === 0) {
                 cardsGrid.className = "block w-full py-12 text-center";
                 cardsGrid.innerHTML = `
@@ -1544,16 +1685,16 @@
                 `;
             } else {
                 cardsGrid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
-                filteredPredictions.forEach(pred => {
-                    if (pred.visible) {
+                predictionEntries.forEach(([predKey, pred]) => {
+                    if (pred.visible && (currentPredictionCategory === "ALL PREDICTIONS" || pred.category.toUpperCase() === currentPredictionCategory)) {
                         const card = document.createElement('div');
                         card.className = "w-full bg-[#111827] rounded-2xl p-6 shadow-xl border border-white/5 hover:border-white/10 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between min-h-[380px] group relative overflow-hidden";
-                        const predictionJSON = JSON.stringify(pred).replace(/"/g, '&quot;');
+                        const targetRoute = `#/sports/prediction/${predKey}`;
                         const customTitle = `${pred.teams.t1.name} vs ${pred.teams.t2.name} | ${pred.matchTitle}`;
 
                         card.innerHTML = `
                             <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,119,255,0.03),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                            <div class="flex flex-col gap-3 relative z-10">
+                            <div class="flex flex-col gap-3 relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
                                 <div class="flex items-center justify-between">
                                     <span class="text-[10px] font-bold text-[#FF003C] bg-[#FF003C]/10 px-3 py-1 rounded-full uppercase tracking-wider">${pred.category}</span>
                                     ${pred.predictionSettings.enablePrediction ? `
@@ -1567,7 +1708,7 @@
                                     <p class="text-gray-400 text-xs mt-1 font-medium tracking-wide">${pred.subtitle}</p>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-7 items-center justify-center my-6 py-4 px-2 bg-[#0b1220]/40 border border-white/5 rounded-xl relative z-10">
+                            <div class="grid grid-cols-7 items-center justify-center my-6 py-4 px-2 bg-[#0b1220]/40 border border-white/5 rounded-xl relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
                                 <div class="col-span-3 flex flex-col items-center gap-2">
                                     <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/5 p-2.5 border border-white/10 flex items-center justify-center shadow-md">
                                         <img referrerpolicy="no-referrer" src="${pred.teams.t1.logo}" alt="${pred.teams.t1.name}" class="w-full h-full object-contain"/>
@@ -1587,7 +1728,7 @@
                                 </div>
                             </div>
                             <div class="relative z-10 mt-auto">
-                                <button onclick="openPredictionModal(${predictionJSON})" class="w-full bg-[#0077FF] hover:bg-[#0066DD] text-white text-xs sm:text-sm font-bold uppercase tracking-widest py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_14px_rgba(0,119,255,0.25)] focus:outline-none">
+                                <button onclick="navigateToRoute(event, '${targetRoute}')" class="w-full bg-[#0077FF] hover:bg-[#0066DD] text-white text-xs sm:text-sm font-bold uppercase tracking-widest py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_14px_rgba(0,119,255,0.25)] focus:outline-none">
                                     <span>Get Prediction</span>
                                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                 </button>
@@ -1781,19 +1922,13 @@
                 startCountdownTimer();
             }
 
-            // Universal fallback state if both are empty
+            // State-lock bug resolved cleanly without using replaceWith()
             if (liveMatches.length === 0 && upcomingMatches.length === 0) {
-                const emptyView = document.createElement('div');
-                emptyView.className = "flex flex-col items-center justify-center text-center p-12 bg-[#111827] rounded-3xl border border-white/5 gap-4 shadow-2xl w-full my-6";
-                emptyView.innerHTML = `
-                    <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-gray-400 shrink-0">
-                        <i data-lucide="calendar-x" class="w-8 h-8"></i>
-                    </div>
-                    <h3 class="text-lg font-black uppercase text-white tracking-wider">No Match Currently Available</h3>
-                    <p class="text-sm text-gray-400 max-w-sm">No live or scheduled upcoming matches currently available for this category. Stay tuned for future schedule updates.</p>
-                `;
-                liveGrid.parentElement.replaceWith(emptyView);
-                upcomingGrid.parentElement.remove();
+                document.getElementById('sport-details-content-wrapper').classList.add('hidden');
+                document.getElementById('sport-details-empty-state').classList.remove('hidden');
+            } else {
+                document.getElementById('sport-details-content-wrapper').classList.remove('hidden');
+                document.getElementById('sport-details-empty-state').classList.add('hidden');
             }
 
             lucide.createIcons();
@@ -1931,6 +2066,89 @@
                 relatedGrid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
             }
 
+            lucide.createIcons();
+        }
+
+        // Render Page 8 Dedicated Predictions Page
+        function renderPredictionDetailsPage(predKey) {
+            if (!globalData || !globalData.Prediction) return;
+            const pred = globalData.Prediction[predKey];
+            if (!pred) return;
+
+            // Load Header Details
+            document.getElementById('pred-details-category').innerText = pred.category;
+            document.getElementById('pred-details-match-title').innerText = `${pred.teams.t1.name} vs ${pred.teams.t2.name} | ${pred.matchTitle}`;
+            
+            // Set Logos
+            document.getElementById('pred-details-t1-logo').src = pred.teams.t1.logo;
+            document.getElementById('pred-details-t1-name').innerText = pred.teams.t1.name;
+            document.getElementById('pred-details-table-t1-name').innerText = pred.teams.t1.name;
+
+            document.getElementById('pred-details-t2-logo').src = pred.teams.t2.logo;
+            document.getElementById('pred-details-t2-name').innerText = pred.teams.t2.name;
+            document.getElementById('pred-details-table-t2-name').innerText = pred.teams.t2.name;
+
+            // Render Metrics Rows with custom color progress rating dots matching Screen 1 Table style
+            const tableBody = document.getElementById('pred-details-table-body');
+            tableBody.innerHTML = '';
+            
+            if (pred.analysis.metrics) {
+                pred.analysis.metrics.forEach(m => {
+                    const row = document.createElement('tr');
+                    row.className = "border-b border-white/5";
+                    row.innerHTML = `
+                        <td class="py-4 font-bold text-gray-300 uppercase text-xs tracking-wider">${m.label}</td>
+                        <td class="py-4 text-center">${generateRatingDots(m.t1.status, m.t1.value)}</td>
+                        <td class="py-4 text-center">${generateRatingDots(m.t2.status, m.t2.value)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Expert Analysis & Pointer description paragraphs
+            document.getElementById('pred-details-description').innerText = pred.analysis.description || 'No analytical description available for this match.';
+
+            // Render Bullet Tips Points List
+            const pointersUl = document.getElementById('pred-details-pointers');
+            pointersUl.innerHTML = '';
+            if (pred.analysis.bulletPoints) {
+                pred.analysis.bulletPoints.forEach(pt => {
+                    const li = document.createElement('li');
+                    li.className = "flex items-start gap-2 text-gray-300";
+                    li.innerHTML = `
+                        <i data-lucide="check" class="w-4 h-4 text-[#00FF87] shrink-0 mt-0.5"></i>
+                        <span>${pt}</span>
+                    `;
+                    pointersUl.appendChild(li);
+                });
+            }
+
+            // Match Prediction outcome cards box matching Screen 2
+            const outcomesBox = document.getElementById('pred-details-outcomes-container');
+            outcomesBox.innerHTML = '';
+            let outcomesHtml = "";
+
+            if (pred.predictionSettings.options) {
+                pred.predictionSettings.options.forEach(opt => {
+                    outcomesHtml += `
+                        <div class="bg-[#15212D]/80 p-4 border border-white/5 rounded-2xl flex flex-col gap-1.5 shadow-lg">
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${opt.title}</span>
+                            <span class="text-[#00FF87] font-black text-base uppercase tracking-wider">${opt.outcome}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (pred.predictionSettings.scorePredictionText) {
+                outcomesHtml += `
+                    <div class="bg-[#15212D]/80 p-4 border border-white/5 rounded-2xl flex flex-col gap-1.5 shadow-lg">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Possible Score</span>
+                        <span class="text-amber-500 font-black text-base uppercase tracking-wider">${pred.predictionSettings.scorePredictionText}</span>
+                    </div>
+                `;
+            }
+
+            outcomesBox.innerHTML = outcomesHtml;
             lucide.createIcons();
         }
 
