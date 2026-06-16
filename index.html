@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSN 365 | Home</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Rubik) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Swiper CSS CDN for Sliders -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        html, body {
+            background-color: #0B111A;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: 'Rubik', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom Swiper pagination colors - Neon Red */
+        .swiper-pagination-bullet-active {
+            background: #FF003C !important;
+        }
+        /* Premium Glowing Scrollbar - Neon Red */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B111A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #15212D;
+            border-radius: 4px;
+            border: 2px solid #0B111A;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF003C;
+        }
+        /* GPU Optimization - Prevent browser memory overflow to secure ultra-smooth 60fps scrolling */
+        .page-view {
+            will-change: opacity;
+            contain: content;
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col justify-between">
+
+    <!-- Toast Notification Container (For Bell Click Reminder) -->
+    <div id="toast-container" class="fixed top-24 right-6 z-[110] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Header Section (Fully Fluid Widescreen Design with perfect logo & search bar alignment) -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5" style="background: rgba(21, 33, 45, 0.75); backdrop-filter: blur(7.5px);">
+        <div class="w-full px-8 py-3 max-[820px]:px-4">
+            <div class="flex h-16 items-center justify-between">
+                <!-- Dynamic Logo Setup from API -->
+                <div class="flex gap-12 items-center">
+                    <a class="flex items-center gap-2" href="#/" onclick="navigateToRoute(event, '#/')">
+                        <img id="header-logo" referrerpolicy="no-referrer" src="" class="h-10 w-auto object-contain hidden" alt="TSN Logo"/>
+                        <!-- Fallback logo if API is loading or fails -->
+                        <span id="header-logo-fallback" class="text-2xl font-black italic tracking-wider text-white">TSN<span class="text-[#FF003C]">.</span></span>
+                    </a>
+                    <nav class="hidden md:flex items-center gap-8 text-[1.125rem] font-normal leading-[120%]">
+                        <a class="transition-all duration-300 nav-link text-gray-400 hover:text-white" href="#/" onclick="navigateToRoute(event, '#/')">Home</a>
+                        <div class="flex items-center gap-2">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span class="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping bg-red-500"></span>
+                                <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                            </span>
+                            <a class="transition-all duration-300 nav-link text-gray-400 hover:text-white" href="#/sports/live" onclick="navigateToRoute(event, '#/sports/live')">Live</a>
+                        </div>
+                        <a class="transition-all duration-300 nav-link text-gray-400 hover:text-white" href="#/sports/upcoming" onclick="navigateToRoute(event, '#/sports/upcoming')">Upcoming</a>
+                        <a class="transition-all duration-300 nav-link text-gray-400 hover:text-white" href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')">Predictions</a>
+                        <a class="transition-all duration-300 nav-link text-gray-400 hover:text-white" href="#/sports/highlights" onclick="navigateToRoute(event, '#/sports/highlights')">Highlights</a>
+                        <a class="transition-all duration-300 nav-link text-gray-400 hover:text-white" href="/contact">Contact</a>
+                    </nav>
+                </div>
+
+                <!-- Search (Perfect margin and gap setup to prevent navigation collision) -->
+                <div class="hidden md:flex items-center gap-4 ml-6 shrink-0">
+                    <div class="relative w-[320px]">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                        <input type="text" placeholder="What are you looking for" class="w-full h-10 bg-[#0F161F] border border-white/5 rounded-lg pl-11 pr-4 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#FF003C]/50 focus:ring-1 focus:ring-[#FF003C]/50 transition-all font-medium">
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-white transition-colors p-2 focus:outline-none">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#0F161F] border-b border-white/5 px-6 py-4 space-y-4">
+            <a class="block text-gray-400 hover:text-white" href="#/" onclick="navigateToRoute(event, '#/')">Home</a>
+            <a class="block text-gray-400 hover:text-white" href="#/sports/live" onclick="navigateToRoute(event, '#/sports/live')">Live</a>
+            <a class="block text-gray-400 hover:text-white" href="#/sports/upcoming" onclick="navigateToRoute(event, '#/sports/upcoming')">Upcoming</a>
+            <a class="block text-gray-400 hover:text-white" href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')">Predictions</a>
+            <a class="block text-gray-400 hover:text-white" href="#/sports/highlights" onclick="navigateToRoute(event, '#/sports/highlights')">Highlights</a>
+            <a class="block text-gray-400 hover:text-white" href="/contact">Contact</a>
+        </div>
+    </header>
+
+    <!-- Main Content Section (Optimized fluid widescreen container to prevent desktop layout cutoff) -->
+    <main class="flex-grow w-full px-4 md:px-12 py-6 flex flex-col justify-start">
+        
+        <!-- PAGE 1: HOME VIEW -->
+        <div id="home-view" class="page-view space-y-12">
+            <!-- Hero Slider Section -->
+            <section class="w-full">
+                <div class="swiper hero-slider w-full">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="relative w-full h-[500px] md:h-[650px] overflow-hidden group bg-black rounded-3xl">
+                                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('https://res.cloudinary.com/dnpvdgpgu/image/upload/v1779656539/tsn-sports/file_ulljhv.jpg');">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B111A] via-[#0B111A]/60 to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-r from-[#0B111A]/90 via-[#0B111A]/40 to-transparent"></div>
+                                </div>
+                                <div class="relative h-full w-full mx-auto px-6 md:px-12 pb-10 md:pb-[80px] flex flex-col justify-end items-start text-white">
+                                    <div class="w-full max-w-4xl space-y-4 md:space-y-6">
+                                        <div class="flex flex-wrap gap-3">
+                                            <span class="flex items-center gap-2 px-3 py-1.5 bg-[#FF003C] text-white text-xs font-bold rounded-full">
+                                                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>Live now
+                                            </span>
+                                            <span class="px-3 py-1.5 bg-[#0F172A]/80 backdrop-blur-md text-gray-300 text-xs font-medium rounded-full border border-white/10">Featured</span>
+                                        </div>
+                                        <div class="space-y-3">
+                                            <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tight">Watch Live Sports From Around The World</h1>
+                                            <p class="text-base md:text-xl text-gray-300 font-normal leading-relaxed max-w-2xl">Stream thousands of live events, highlights, and get expert predictions for your favorite sports</p>
+                                        </div>
+                                        <div class="pt-4 mb-10">
+                                            <a class="inline-flex items-center gap-2 px-6 py-3.5 bg-[#FF003C] hover:bg-[#D60032] text-white text-sm font-semibold rounded-lg transition-all hover:scale-105 active:scale-95 shadow-lg shadow-red-600/20" href="#/sports/live" onclick="navigateToRoute(event, '#/sports/live')">
+                                                <span>Join live now</span>
+                                                <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Browse by Sport Section -->
+            <section class="py-4">
+                <div class="flex flex-col mb-10">
+                    <h2 class="text-2xl md:text-4xl font-black italic tracking-wide text-white uppercase">Browse by sport</h2>
+                    <p class="text-gray-400 text-sm md:text-base mt-1">Discover live games, highlights, and more</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-9 gap-4 md:gap-6">
+                    <!-- Basketball -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #b43c00" href="#/sports/basketball" onclick="navigateToRoute(event, '#/sports/basketball')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115766/tsn-sports/file_uh2eve.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Basketball"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Basketball</span>
+                        </div>
+                    </a>
+                    <!-- Cricket -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #1a50c2" href="#/sports/cricket" onclick="navigateToRoute(event, '#/sports/cricket')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115806/tsn-sports/file_bsq78c.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Cricket"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Cricket</span>
+                        </div>
+                    </a>
+                    <!-- Football -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #008f3a" href="#/sports/football" onclick="navigateToRoute(event, '#/sports/football')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115415/tsn-sports/file_cwcsta.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Football"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Football</span>
+                        </div>
+                    </a>
+                    <!-- Tennis -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #b48001" href="#/sports/tennis" onclick="navigateToRoute(event, '#/sports/tennis')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115863/tsn-sports/file_dkygbz.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Tennis"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Tennis</span>
+                        </div>
+                    </a>
+                    <!-- Boxing -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #ff00a2" href="#/sports/boxing" onclick="navigateToRoute(event, '#/sports/boxing')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115945/tsn-sports/file_wbystn.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Boxing"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Boxing</span>
+                        </div>
+                    </a>
+                    <!-- Baseball -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #4238bc" href="#/sports/baseball" onclick="navigateToRoute(event, '#/sports/baseball')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116053/tsn-sports/file_x6okvk.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Baseball"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Baseball</span>
+                        </div>
+                    </a>
+                    <!-- Rugby -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #8129c5" href="#/sports/rugby" onclick="navigateToRoute(event, '#/sports/rugby')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116094/tsn-sports/file_iofcyb.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Rugby"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Rugby</span>
+                        </div>
+                    </a>
+                    <!-- Ice Hockey -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #01819b" href="#/sports/ice-hockey" onclick="navigateToRoute(event, '#/sports/ice-hockey')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116129/tsn-sports/file_iieb7q.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Ice Hockey"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Ice Hockey</span>
+                        </div>
+                    </a>
+                    <!-- Volleyball -->
+                    <a class="group flex flex-col items-center justify-center aspect-square rounded-[2rem] transition-all duration-500 hover:scale-102 active:scale-95 hover:-translate-y-2 shadow-xl relative overflow-hidden" style="background-color: #ba1c6c" href="#/sports/volleyball" onclick="navigateToRoute(event, '#/sports/volleyball')">
+                        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-500"></div>
+                        <div class="relative z-10 flex flex-col items-center gap-3">
+                            <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center p-2">
+                                <img referrerpolicy="no-referrer" src="https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116171/tsn-sports/file_hoannk.png" class="w-full h-full object-contain filter drop-shadow-lg" alt="Volleyball"/>
+                            </div>
+                            <span class="text-white font-semibold text-sm md:text-base tracking-wide">Volleyball</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Dynamic Live Now Section -->
+            <section id="live-section" class="py-4">
+                <div class="flex items-end justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl md:text-4xl font-black italic tracking-wide text-white uppercase flex items-center gap-3">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>Live Now
+                        </h2>
+                        <p class="text-gray-400 text-sm mt-1">Catch the action live now</p>
+                    </div>
+                    <a class="flex items-center gap-1 text-[#FF003C] hover:text-[#D60032] text-sm font-semibold transition-colors whitespace-nowrap" href="#/sports/live" onclick="navigateToRoute(event, '#/sports/live')">
+                        <span>See all</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+                
+                <!-- Live Cards Grid (Strictly grid-cols-3 on desktop) -->
+                <div id="live-matches-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Loading Placeholder -->
+                    <div class="col-span-full py-12 flex flex-col items-center justify-center gap-4 text-gray-400">
+                        <div class="w-10 h-10 border-4 border-t-[#FF003C] border-white/10 rounded-full animate-spin"></div>
+                        <span>Loading live matches...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Upcoming Matches Section -->
+            <section class="py-12 border-y border-white/5">
+                <div class="flex items-end justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl md:text-4xl font-black italic tracking-wide text-white uppercase">Upcoming Matches</h2>
+                        <p class="text-gray-400 text-sm mt-1">Don't miss the next big game</p>
+                    </div>
+                    <a class="flex items-center gap-1 text-[#FF003C] hover:text-[#D60032] text-sm font-semibold transition-colors whitespace-nowrap" href="#/sports/upcoming" onclick="navigateToRoute(event, '#/sports/upcoming')">
+                        <span>See all</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Upcoming Cards Grid (Strictly grid-cols-3 on desktop) -->
+                <div id="upcoming-matches-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="col-span-full py-12 flex flex-col items-center justify-center gap-4 text-gray-400">
+                        <div class="w-10 h-10 border-4 border-t-[#FF003C] border-white/10 rounded-full animate-spin"></div>
+                        <span>Loading upcoming matches...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Competitions Slider Section -->
+            <section class="w-full py-6 relative overflow-hidden">
+                <div class="w-full max-w-full mx-auto flex flex-col gap-8">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white text-center">Competitions</h2>
+                    <div class="w-full">
+                        <div class="swiper competition-slider w-full h-[300px] md:h-[500px] pb-12">
+                            <div class="swiper-wrapper" id="competitions-swiper-wrapper">
+                                <!-- Banners dynamically loaded -->
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Match Predictions Section -->
+            <section class="py-4">
+                <div class="flex items-end justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl md:text-4xl font-black italic tracking-wide text-white uppercase">Match Predictions</h2>
+                        <p class="text-gray-400 text-sm mt-1">Expert analysis and winning insights</p>
+                    </div>
+                    <a class="flex items-center gap-1 text-[#FF003C] hover:text-[#D60032] text-sm font-semibold transition-colors whitespace-nowrap" href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')">
+                        <span>See all</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Predictions Grid (Strictly grid-cols-3 on desktop) -->
+                <div id="predictions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="col-span-full py-12 flex flex-col items-center justify-center gap-4 text-gray-400">
+                        <div class="w-10 h-10 border-4 border-t-[#FF003C] border-white/10 rounded-full animate-spin"></div>
+                        <span>Loading match predictions...</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- PAGE 2: LIVE BROADCASTS PAGE (Parameters: /sports/live) -->
+        <div id="live-view" class="page-view hidden space-y-8">
+            <div class="flex flex-col gap-2 border-b border-white/5 pb-6">
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 bg-red-500/10 text-[#FF003C] text-[11px] font-black uppercase rounded-full tracking-wider animate-pulse flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-[#FF003C]"></span>
+                        <span id="live-matches-count-badge">0 Matches Live</span>
+                    </span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-red-600/10 flex items-center justify-center text-[#FF003C] shrink-0 animate-pulse">
+                        <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-4xl font-black uppercase tracking-wide text-white leading-none">Live Broadcasts</h1>
+                        <p class="text-gray-400 text-xs md:text-sm mt-1">Real-time streams across all categories</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Category Slider Pills -->
+            <div class="overflow-x-auto pb-2 scrollbar-none flex gap-2" id="live-category-pills">
+                <!-- Injected dynamically -->
+            </div>
+
+            <!-- Live Matches Cards Wrapper -->
+            <div id="live-view-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Matches load dynamically -->
+            </div>
+
+            <!-- Tall Premium Sports Analytics Ad Box -->
+            <div class="bg-gradient-to-r from-[#111827] to-[#15212D] border border-white/10 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden shadow-2xl min-h-[180px] md:min-h-[220px]">
+                <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-[#00FF87]/5 rounded-full blur-3xl"></div>
+                <div class="flex items-start gap-5">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0 text-[#00FF87] shadow-xl">
+                        <i data-lucide="trophy" class="w-9 h-9 md:w-11 md:h-11"></i>
+                    </div>
+                    <div class="space-y-1.5">
+                        <h3 class="text-xl md:text-3xl font-black text-white tracking-wide uppercase leading-tight">Full Sport Analytics</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">Unlock advanced player statistics, pitch reports, and expert predictions for all active matches.</p>
+                    </div>
+                </div>
+                <a href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')" class="px-8 py-4 bg-[#00FF87] hover:bg-[#00D670] text-black font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-emerald-500/15 shrink-0 flex items-center gap-2.5">
+                    <span>Get Predictions</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- PAGE 3: UPCOMING PAGE (Parameters: /sports/upcoming) -->
+        <div id="upcoming-view" class="page-view hidden space-y-8">
+            <!-- 3 Stats Boxes -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-[#111827] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-xl relative overflow-hidden">
+                    <span class="text-4xl font-black text-white" id="stats-upcoming-count">0</span>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">Upcoming Matches</span>
+                </div>
+                <div class="bg-[#111827] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-xl relative overflow-hidden">
+                    <span class="text-4xl font-black text-white" id="stats-upcoming-cats">0</span>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">Sport Categories</span>
+                </div>
+                <div class="bg-[#111827] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-xl relative overflow-hidden">
+                    <span class="text-4xl font-black text-white" id="stats-upcoming-reminders">0</span>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">Your Reminders</span>
+                </div>
+            </div>
+
+            <!-- Filter Matches Section -->
+            <div class="flex flex-col gap-2 border-t border-white/5 pt-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center text-[#00FF87] shrink-0 animate-bounce">
+                        <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-black uppercase tracking-wide text-white leading-none">Filter Matches</h2>
+                        <p class="text-gray-400 text-xs md:text-sm mt-1">Browse scheduled events by sport</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Category Slider Pills -->
+            <div class="overflow-x-auto pb-2 scrollbar-none flex gap-2" id="upcoming-category-pills">
+                <!-- Injected dynamically -->
+            </div>
+
+            <!-- Upcoming Cards Grid -->
+            <div id="upcoming-view-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Matches load dynamically -->
+            </div>
+
+            <!-- Tall Premium Sports Analytics Ad Box -->
+            <div class="bg-gradient-to-r from-[#111827] to-[#15212D] border border-white/10 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden shadow-2xl min-h-[180px] md:min-h-[220px]">
+                <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-[#00FF87]/5 rounded-full blur-3xl"></div>
+                <div class="flex items-start gap-5">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0 text-[#00FF87] shadow-xl">
+                        <i data-lucide="trophy" class="w-9 h-9 md:w-11 md:h-11"></i>
+                    </div>
+                    <div class="space-y-1.5">
+                        <h3 class="text-xl md:text-3xl font-black text-white tracking-wide uppercase leading-tight">Full Sport Analytics</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">Unlock advanced player statistics, pitch reports, and expert predictions for all active matches.</p>
+                    </div>
+                </div>
+                <a href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')" class="px-8 py-4 bg-[#00FF87] hover:bg-[#00D670] text-black font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-emerald-500/10 shrink-0 flex items-center gap-2">
+                    <span>Get Predictions</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- PAGE 4: PREDICTIONS PAGE (Parameters: /sports/prediction) -->
+        <div id="prediction-view" class="page-view hidden space-y-8">
+            <div class="flex flex-col gap-2 border-b border-white/5 pb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-400 shrink-0 animate-pulse">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-4xl font-black uppercase tracking-wide text-white leading-none">Team Analysis & Predictions</h1>
+                        <p class="text-gray-400 text-xs md:text-sm mt-1">Expert analysis based on recent performances</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="overflow-x-auto pb-2 scrollbar-none flex gap-2" id="prediction-category-pills">
+                <!-- Injected dynamically -->
+            </div>
+
+            <!-- Predictions Grid -->
+            <div id="prediction-view-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Predictions load dynamically -->
+            </div>
+
+            <!-- Tall Premium Sports Analytics Ad Box -->
+            <div class="bg-gradient-to-r from-[#111827] to-[#15212D] border border-amber-500/20 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden shadow-2xl min-h-[180px] md:min-h-[220px]">
+                <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-[#FF003C]/5 rounded-full blur-3xl"></div>
+                <div class="flex items-start gap-5">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20 shrink-0 text-[#FF003C] shadow-xl">
+                        <i data-lucide="play" class="w-9 h-9 md:w-11 md:h-11 fill-[#FF003C]"></i>
+                    </div>
+                    <div class="space-y-1.5">
+                        <h3 class="text-xl md:text-3xl font-black text-white tracking-wide uppercase leading-tight">Watch Live Action</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">Unlock advanced player statistics, pitch reports, and expert predictions for all active matches.</p>
+                    </div>
+                </div>
+                <a href="#/sports/live" onclick="navigateToRoute(event, '#/sports/live')" class="px-8 py-4 bg-[#FF003C] hover:bg-[#D60032] text-white font-black text-xs md:text-sm uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-red-500/15 shrink-0 flex items-center gap-2.5">
+                    <span>Go to Live</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- PAGE 5: HIGHLIGHTS PAGE (Parameters: /sports/highlights) -->
+        <div id="highlights-view" class="page-view hidden flex flex-col items-center justify-center py-16 space-y-12">
+            <div class="flex flex-col items-center text-center max-w-xl space-y-6">
+                <div class="w-16 h-16 rounded-full bg-[#15212D] border border-white/5 flex items-center justify-center shadow-lg relative shrink-0">
+                    <i data-lucide="clapperboard" class="w-8 h-8 text-blue-400 animate-bounce"></i>
+                </div>
+                <div class="space-y-3">
+                    <h2 class="text-3xl md:text-4xl font-black uppercase tracking-wide text-white leading-tight">Highlights Coming Soon</h2>
+                    <p class="text-gray-400 text-sm leading-relaxed">We're working hard to bring you the best match highlights, key moments, and exclusive replays. Stay tuned!</p>
+                </div>
+                <!-- Interactive Loading Dots -->
+                <div class="flex items-center gap-2 pt-2">
+                    <span class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+                    <span class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                    <span class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                </div>
+            </div>
+
+            <!-- Tall Premium Sports Analytics Ad Box -->
+            <div class="w-full bg-gradient-to-r from-[#111827] to-[#15212D] border border-white/10 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden shadow-2xl min-h-[180px] md:min-h-[220px]">
+                <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-[#FF003C]/5 rounded-full blur-3xl"></div>
+                <div class="flex items-start gap-5">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20 shrink-0 text-[#FF003C] shadow-xl">
+                        <i data-lucide="play" class="w-9 h-9 md:w-11 md:h-11 fill-[#FF003C]"></i>
+                    </div>
+                    <div class="space-y-1.5">
+                        <h3 class="text-xl md:text-3xl font-black text-white tracking-wide uppercase leading-tight">Watch Live Action</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">Unlock advanced player statistics, pitch reports, and expert predictions for all active matches.</p>
+                    </div>
+                </div>
+                <a href="#/sports/live" onclick="navigateToRoute(event, '#/sports/live')" class="px-8 py-4 bg-[#FF003C] hover:bg-[#D60032] text-white font-black text-xs md:text-sm uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-red-500/15 shrink-0 flex items-center gap-2.5">
+                    <span>Go to Live</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- PAGE 6: SPORTS DETAILS VIEW -->
+        <div id="sport-details-view" class="page-view hidden space-y-8">
+            <!-- Back button -->
+            <div>
+                <button onclick="navigateToRoute(event, '#/')" class="flex items-center gap-2 text-gray-400 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back</span>
+                </button>
+            </div>
+
+            <!-- Sport Header Card -->
+            <div id="sport-details-header-card" class="bg-gradient-to-r from-[#111827] to-[#15212D] border border-white/10 rounded-3xl p-6 flex items-center gap-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-[#FF003C]/5 rounded-full blur-3xl"></div>
+                <!-- Injected dynamically based on selected sport -->
+                <div id="sport-details-header-content" class="flex items-center gap-6 w-full">
+                    <!-- Dynamic content populated via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Content Wrapper (Hidden/Shown dynamically to resolve state lock bug) -->
+            <div id="sport-details-content-wrapper" class="space-y-8">
+                <!-- Live Broadcasts Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 border-b border-white/5 pb-2">
+                        <i data-lucide="play" class="w-5 h-5 text-[#FF003C] animate-pulse"></i>
+                        <h2 class="text-xl font-black uppercase tracking-wide">Live Broadcasts</h2>
+                    </div>
+                    <div id="sport-details-live-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Live match cards inside sport -->
+                    </div>
+                </div>
+
+                <!-- Scheduled Matches Section -->
+                <div class="space-y-4 pt-4">
+                    <div class="flex items-center gap-2 border-b border-white/5 pb-2">
+                        <i data-lucide="calendar" class="w-5 h-5 text-[#00FF87]"></i>
+                        <h2 class="text-xl font-black uppercase tracking-wide">Scheduled Matches</h2>
+                    </div>
+                    <div id="sport-details-upcoming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Upcoming match cards inside sport -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clean fallback empty state container -->
+            <div id="sport-details-empty-state" class="hidden flex flex-col items-center justify-center text-center p-12 bg-[#111827] rounded-3xl border border-white/5 gap-4 shadow-2xl w-full my-6">
+                <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-gray-400 shrink-0">
+                    <i data-lucide="calendar-x" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-black uppercase text-white tracking-wider">No Match Currently Available</h3>
+                <p class="text-sm text-gray-400 max-w-sm">No live or scheduled upcoming matches currently available for this category. Stay tuned for future schedule updates.</p>
+            </div>
+        </div>
+
+        <!-- PAGE 7: ROUTED VIDEO PLAYER VIEW -->
+        <div id="video-player-view" class="page-view hidden space-y-8">
+            <!-- Back Link -->
+            <div>
+                <button onclick="navigateToRoute(event, '#/sports/live')" class="flex items-center gap-2 text-gray-400 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Live</span>
+                </button>
+            </div>
+
+            <!-- Video Player Display Container -->
+            <div id="video-player-main-box" class="w-full aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 relative shadow-2xl shadow-[#FF003C]/5">
+                <!-- Dynamic Iframe Video Player injected here -->
+            </div>
+
+            <!-- Live Match Details Panel -->
+            <div id="video-player-info-card" class="bg-gradient-to-r from-[#111827] to-[#15212D] border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-[#FF003C]/5 rounded-full blur-3xl"></div>
+                <div id="video-player-info-content" class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Live Servers Switcher List -->
+            <div class="space-y-3">
+                <span class="text-xs font-black uppercase tracking-widest text-gray-400">Available Servers</span>
+                <div id="video-player-servers-list" class="flex flex-wrap gap-3">
+                    <!-- Dynamically populated server switcher buttons -->
+                </div>
+            </div>
+
+            <!-- Related Active Live Matches Section -->
+            <div class="space-y-6 pt-4">
+                <div class="flex items-center gap-2 border-b border-white/5 pb-2">
+                    <i data-lucide="play" class="w-5 h-5 text-[#FF003C]"></i>
+                    <h2 class="text-xl font-black uppercase tracking-wide">Related Live Matches</h2>
+                </div>
+                <div id="video-player-related-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Clickable live cards populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 8: ROUTED PREDICTIONS DETAIL VIEW -->
+        <div id="prediction-details-view" class="page-view hidden space-y-8">
+            <!-- Back Link -->
+            <div>
+                <button onclick="navigateToRoute(event, '#/sports/prediction')" class="flex items-center gap-2 text-gray-400 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Predictions</span>
+                </button>
+            </div>
+
+            <!-- Sport Category and Match Title Card -->
+            <div class="space-y-3">
+                <span id="pred-details-category" class="text-[10px] font-black uppercase text-[#FF003C] bg-[#FF003C]/10 px-3 py-1 rounded-full tracking-wider inline-block">Category</span>
+                <h1 id="pred-details-match-title" class="text-2xl md:text-3xl font-black text-white leading-tight uppercase">Germany vs Curaçao | FIFA World Cup</h1>
+            </div>
+
+            <!-- Teams Comparison Block -->
+            <div class="bg-[#111827] border border-white/5 rounded-3xl p-6 md:p-8 flex items-center justify-between shadow-2xl relative overflow-hidden">
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/5 p-3 border border-white/10 flex items-center justify-center shadow-lg">
+                        <img id="pred-details-t1-logo" referrerpolicy="no-referrer" src="" alt="Team 1" class="w-full h-full object-contain"/>
+                    </div>
+                    <span id="pred-details-t1-name" class="text-sm md:text-base font-black text-white uppercase tracking-wider text-center line-clamp-1">Germany</span>
+                </div>
+                <div class="mx-4 flex flex-col items-center justify-center shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-[#15212D] border border-white/10 flex items-center justify-center shadow-inner">
+                        <span class="text-xs font-black italic text-gray-400 uppercase tracking-widest">VS</span>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/5 p-3 border border-white/10 flex items-center justify-center shadow-lg">
+                        <img id="pred-details-t2-logo" referrerpolicy="no-referrer" src="" alt="Team 2" class="w-full h-full object-contain"/>
+                    </div>
+                    <span id="pred-details-t2-name" class="text-sm md:text-base font-black text-white uppercase tracking-wider text-center line-clamp-1">Curaçao</span>
+                </div>
+            </div>
+
+            <!-- Detailed Comparison Table (Metrics) -->
+            <div class="bg-[#15212D]/60 border border-white/5 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
+                <div class="flex items-center gap-2 border-b border-white/5 pb-3">
+                    <i data-lucide="grid-3x3" class="w-5 h-5 text-blue-400"></i>
+                    <h3 class="text-lg font-black uppercase tracking-wide">Detailed Comparison Table</h3>
+                </div>
+                
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="text-left text-[11px] font-black text-gray-400 uppercase tracking-widest border-b border-white/5">
+                                <th class="pb-3 w-1/3">Category</th>
+                                <th class="pb-3 w-1/3 text-center" id="pred-details-table-t1-name">Team A</th>
+                                <th class="pb-3 w-1/3 text-center" id="pred-details-table-t2-name">Team B</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pred-details-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Legend Indicator -->
+                <div class="flex flex-wrap gap-6 pt-2 text-[10px] font-black uppercase tracking-widest text-gray-400 border-t border-white/5 justify-center">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#00FF87]"></span>
+                        <span>Strong Form</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span>Average Form</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#FF003C]"></span>
+                        <span>Weak Form</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expert Analysis and bullet points pointers -->
+            <div class="bg-[#15212D]/60 border border-white/5 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
+                <div class="flex items-center gap-2 border-b border-white/5 pb-3">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-blue-400"></i>
+                    <h3 class="text-lg font-black uppercase tracking-wide">Expert Analysis & Pointers</h3>
+                </div>
+                <p id="pred-details-description" class="text-gray-300 text-sm md:text-base leading-relaxed"></p>
+                <div class="space-y-4 pt-2">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-[#00FF87]">Key Notes & Tips</h4>
+                    <ul id="pred-details-pointers" class="space-y-3 text-gray-300 text-sm pl-1">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Match Prediction Golden/Trophy Panel Card -->
+            <div class="bg-gradient-to-r from-[#111827] to-[#15212D] border border-amber-500/20 rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl shadow-amber-500/5">
+                <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl"></div>
+                <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-3">
+                    <i data-lucide="trophy" class="w-6 h-6 text-amber-500 shrink-0"></i>
+                    <h3 class="text-lg font-black uppercase tracking-wide text-amber-500">Match Prediction Outcomes</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10" id="pred-details-outcomes-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer Section (Fully Controlled by API site_settings with flex mt-auto mapping to fill any blank space) -->
+    <footer class="w-full bg-[#15212D] text-white border-t border-white/5 mt-auto">
+        <div class="max-w-full flex flex-col items-start px-8 py-12 gap-10">
+            <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-10">
+                
+                <!-- Col 1: Logo & Dynamic Description -->
+                <div class="md:col-span-4 flex flex-col gap-4">
+                    <a class="flex items-center gap-2" href="#/" onclick="navigateToRoute(event, '#/')">
+                        <img id="footer-logo" referrerpolicy="no-referrer" src="" class="h-10 w-auto object-contain hidden" alt="TSN Logo"/>
+                        <span id="footer-logo-fallback" class="text-3xl font-black italic tracking-wider text-white">TSN<span class="text-[#FF003C]">.</span></span>
+                    </a>
+                    <p id="footer-desc" class="text-[1rem] font-normal leading-relaxed text-gray-300 max-w-[320px]">
+                        Loading platform description...
+                    </p>
+                </div>
+
+                <!-- Col 2: Footer Navigation -->
+                <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-8 w-full">
+                    
+                    <!-- Quick Links -->
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-[1.125rem] font-bold">Quick Links</h4>
+                        <ul class="flex flex-col gap-3">
+                            <li><a class="text-gray-400 hover:text-white transition-colors" href="#/" onclick="navigateToRoute(event, '#/')">Home</a></li>
+                            <li><a class="text-gray-400 hover:text-white transition-colors" href="#/sports/live" onclick="navigateToRoute(event, '#/sports/live')">Live Events</a></li>
+                            <li><a class="text-gray-400 hover:text-white transition-colors" href="#/sports/highlights" onclick="navigateToRoute(event, '#/sports/highlights')">Highlights</a></li>
+                            <li><a class="text-gray-400 hover:text-white transition-colors" href="#/sports/prediction" onclick="navigateToRoute(event, '#/sports/prediction')">Predictions</a></li>
+                            <li><a class="text-gray-400 hover:text-white transition-colors" href="/contact">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Dynamic Contact Us (Controlled by site_settings.contact) -->
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-[1.125rem] font-bold">Contact Us</h4>
+                        <ul class="flex flex-col gap-3 text-gray-400 text-sm">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-[#FF003C] shrink-0 mt-1"></i> 
+                                <span id="footer-address">Loading address...</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="mail" class="w-4 h-4 text-[#FF003C] shrink-0"></i> 
+                                <span id="footer-email" class="break-all">Loading email...</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="phone" class="w-4 h-4 text-[#FF003C] shrink-0"></i> 
+                                <span id="footer-phone">Loading phone...</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Dynamic Social Media (Controlled by site_settings.social_media) -->
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-[1.125rem] font-bold">Connect With Us</h4>
+                        <ul id="footer-social-links" class="flex flex-col gap-3 text-gray-400 text-sm capitalize">
+                            <!-- Social links injected dynamically -->
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer Copyright -->
+            <div class="w-full pt-10 border-t border-white/5 flex flex-col items-center">
+                <p id="footer-copyright" class="text-sm font-normal text-gray-400 flex items-center gap-2">
+                    Loading copyright information...
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Video Player Modal Overlay -->
+    <div id="video-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[100] hidden">
+        <div class="w-full max-w-4xl mx-auto px-4 flex flex-col gap-4">
+            
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center bg-[#15212D] px-6 py-4 rounded-t-xl border border-white/5 border-b-0">
+                <h3 id="modal-match-title" class="text-lg font-black uppercase tracking-wide text-white">Live Stream</h3>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-white transition-colors p-2 focus:outline-none">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Video/Iframe Container -->
+            <div id="iframe-box-holder" class="w-full aspect-video bg-black rounded-b-xl overflow-hidden border border-white/5 relative shadow-2xl shadow-[#FF003C]/10">
+                <!-- IFrame dynamically loaded here -->
+            </div>
+
+            <!-- Channel Select List -->
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Available Channels</span>
+                <div id="modal-channel-list" class="flex flex-wrap gap-2">
+                    <!-- Dynamic Buttons -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Prediction Details Modal -->
+    <div id="prediction-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[100] hidden">
+        <div class="w-full max-w-2xl mx-auto px-4">
+            <div class="bg-[#15212D] border border-white/10 rounded-2xl overflow-hidden shadow-2xl p-6 relative max-h-[85vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="pred-modal-title" class="text-xl font-black uppercase tracking-wide text-[#FF003C]">Match Analysis</h3>
+                    <button id="close-pred-btn" class="text-gray-400 hover:text-white transition-colors p-2 focus:outline-none">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <p id="pred-modal-desc" class="text-gray-300 text-sm leading-relaxed mb-6"></p>
+
+                <!-- Skill Metrics -->
+                <div class="space-y-4 mb-6" id="pred-modal-metrics">
+                    <!-- Dynamic Skills Progress Bars -->
+                </div>
+
+                <!-- Key Predictions -->
+                <div>
+                    <h4 class="text-xs font-black uppercase tracking-widest text-[#00FF87] mb-3">Key Predictions & Tips</h4>
+                    <ul id="pred-modal-bullets" class="space-y-2 text-gray-300 text-sm list-disc pl-5">
+                        <!-- Bullets dynamic list -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Swiper Sliders JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Script Section -->
+    <script>
+        let activeMatchChannels = [];
+        let countdownInterval = null;
+        let compSwiper = null;
+        let globalData = null; // Store fetched data globally for dynamic rendering on route change
+        let userRemindersCount = 0; // State for counting clicked notification bells
+
+        // Filter States
+        let currentLiveCategory = "ALL LIVE";
+        let currentUpcomingCategory = "ALL SPORTS";
+        let currentPredictionCategory = "ALL PREDICTIONS";
+
+        // Global list of categories as shown in Homepage Browse By Sport Section for complete slider rendering
+        const ALL_GLOBAL_CATEGORIES = ["ALL", "BASKETBALL", "CRICKET", "FOOTBALL", "TENNIS", "BOXING", "BASEBALL", "RUGBY", "ICE HOCKEY", "VOLLEYBALL"];
+
+        // Sports metadata mapping for details page
+        const sportsLookup = {
+            "basketball": { name: "Basketball", color: "#b43c00", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115766/tsn-sports/file_uh2eve.png", catKey: "Basketball" },
+            "cricket": { name: "Cricket", color: "#1a50c2", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115806/tsn-sports/file_bsq78c.png", catKey: "Cricket" },
+            "football": { name: "Football", color: "#008f3a", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115415/tsn-sports/file_cwcsta.png", catKey: "Football" },
+            "tennis": { name: "Tennis", color: "#b48001", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115863/tsn-sports/file_dkygbz.png", catKey: "Tennis" },
+            "boxing": { name: "Boxing", color: "#ff00a2", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781115945/tsn-sports/file_wbystn.png", catKey: "Boxing" },
+            "baseball": { name: "Baseball", color: "#4238bc", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116053/tsn-sports/file_x6okvk.png", catKey: "Baseball" },
+            "rugby": { name: "Rugby", color: "#8129c5", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116094/tsn-sports/file_iofcyb.png", catKey: "Rugby" },
+            "ice-hockey": { name: "Ice Hockey", color: "#01819b", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116129/tsn-sports/file_iieb7q.png", catKey: "Ice Hockey" },
+            "volleyball": { name: "Volleyball", color: "#ba1c6c", img: "https://res.cloudinary.com/dnpvdgpgu/image/upload/v1781116171/tsn-sports/file_hoannk.png", catKey: "Volleyball" }
+        };
+
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Helper function to slugify team names for clean URLs
+        function slugify(text) {
+            return text.toString().toLowerCase().trim()
+                .replace(/\s+/g, '-')           
+                .replace(/[^\w\-]+/g, '')       
+                .replace(/\-\-+/g, '-');        
+        }
+
+        // Helper function to dynamically draw form status dots matching Screen 1 rating dots
+        function generateRatingDots(status, value) {
+            let dotColorClass = "bg-[#00FF87]"; // Strong Form
+            if (status === "AVERAGE") dotColorClass = "bg-amber-500"; // Average Form
+            if (status === "WEAK") dotColorClass = "bg-[#FF003C]"; // Weak Form
+
+            let dotsHtml = '<div class="flex items-center gap-1 justify-center shrink-0">';
+            for (let i = 1; i <= 10; i++) {
+                if (i <= value) {
+                    dotsHtml += `<span class="w-2.5 h-2.5 rounded-full ${dotColorClass}"></span>`;
+                } else {
+                    dotsHtml += `<span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>`;
+                }
+            }
+            dotsHtml += '</div>';
+            return dotsHtml;
+        }
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Safe fetch from the proxy API
+        const API_URL = 'https://tight-river-c898.ranatoufik66.workers.dev/?url=https://all-rounder-two.vercel.app/tsn';
+
+        async function loadTSNData() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                if (data) {
+                    globalData = data;
+                    processSettings(data.site_settings);
+                    processEventsAndPredictions(data);
+                    
+                    // Handle client side route mapping
+                    handleRouteRendering();
+                }
+            } catch (error) {
+                console.error("Error fetching TSN API Data: ", error);
+            }
+        }
+
+        // Routing Logic (Fully compatible hash-based router for errorless see-all redircetion)
+        function navigateToRoute(event, route) {
+            if (event) event.preventDefault();
+            window.history.pushState({}, "", route);
+            handleRouteRendering();
+        }
+
+        window.addEventListener('popstate', handleRouteRendering);
+        window.addEventListener('hashchange', handleRouteRendering);
+
+        function handleRouteRendering() {
+            const path = window.location.hash || window.location.pathname;
+            
+            // Hide all views first
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.add('hidden');
+            });
+
+            // Reset navigation active link status colors
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-[#FF003C]');
+                link.classList.add('text-gray-400');
+            });
+
+            // Stop Swiper autoplay on background sections to prevent browser rendering lag
+            if (compSwiper && compSwiper.autoplay) {
+                if (path === '#/' || path === '/' || path === '#/home' || path === '') {
+                    compSwiper.autoplay.start();
+                } else {
+                    compSwiper.autoplay.stop();
+                }
+            }
+
+            if (path === '#/' || path === '/' || path === '#/home' || path === '') {
+                document.getElementById('home-view').classList.remove('hidden');
+                updateActiveNavLink('#/');
+            } else if (path.startsWith('#/sports/live/')) {
+                document.getElementById('video-player-view').classList.remove('hidden');
+                const routeParams = path.replace('#/sports/live/', '');
+                renderVideoPlayerPage(routeParams);
+            } else if (path.startsWith('#/sports/prediction/')) {
+                document.getElementById('prediction-details-view').classList.remove('hidden');
+                const predKey = path.replace('#/sports/prediction/', '');
+                renderPredictionDetailsPage(predKey);
+            } else if (path === '#/sports/live' || path === '/sports/live' || path === '/live') {
+                document.getElementById('live-view').classList.remove('hidden');
+                updateActiveNavLink('#/sports/live');
+                renderLiveBroadcastsPage();
+            } else if (path === '#/sports/upcoming' || path === '/sports/upcoming' || path === '/upcoming') {
+                document.getElementById('upcoming-view').classList.remove('hidden');
+                updateActiveNavLink('#/sports/upcoming');
+                renderUpcomingBroadcastsPage();
+            } else if (path === '#/sports/prediction' || path === '/sports/prediction' || path === '/predictions') {
+                document.getElementById('prediction-view').classList.remove('hidden');
+                updateActiveNavLink('#/sports/prediction');
+                renderPredictionsPage();
+            } else if (path === '#/sports/highlights' || path === '/sports/highlights' || path === '/highlights') {
+                document.getElementById('highlights-view').classList.remove('hidden');
+                updateActiveNavLink('#/sports/highlights');
+            } else if (path.startsWith('#/sports/')) {
+                const sportName = path.replace('#/sports/', '').toLowerCase();
+                document.getElementById('sport-details-view').classList.remove('hidden');
+                renderSportDetailsPage(sportName);
+            } else {
+                // Fallback home
+                document.getElementById('home-view').classList.remove('hidden');
+                updateActiveNavLink('#/');
+            }
+
+            // Scroll to top upon page navigation
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+
+        function updateActiveNavLink(route) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === route) {
+                    link.classList.add('text-[#FF003C]');
+                    link.classList.remove('text-gray-400');
+                }
+            });
+        }
+
+        // 1. Process and render Dynamic Site Settings (Logo, Footer, Swiper Banners)
+        function processSettings(settings) {
+            if (!settings) return;
+
+            // Load Dynamic Header & Footer Logo
+            const headerLogoImg = document.getElementById('header-logo');
+            const headerLogoFallback = document.getElementById('header-logo-fallback');
+            const footerLogoImg = document.getElementById('footer-logo');
+            const footerLogoFallback = document.getElementById('footer-logo-fallback');
+
+            if (settings.logo_info?.logo_value) {
+                headerLogoImg.src = settings.logo_info.logo_value;
+                headerLogoImg.classList.remove('hidden');
+                headerLogoFallback.classList.add('hidden');
+
+                footerLogoImg.src = settings.logo_info.logo_value;
+                footerLogoImg.classList.remove('hidden');
+                footerLogoFallback.classList.add('hidden');
+            } else {
+                headerLogoImg.classList.add('hidden');
+                headerLogoFallback.classList.remove('hidden');
+                footerLogoImg.classList.add('hidden');
+                footerLogoFallback.classList.remove('hidden');
+            }
+
+            // Load Dynamic Footer Site Description
+            if (settings.general?.site_description) {
+                document.getElementById('footer-desc').innerText = settings.general.site_description;
+            }
+
+            // Load Dynamic Copyright Text
+            if (settings.general?.copyright_text) {
+                document.getElementById('footer-copyright').innerText = settings.general.copyright_text;
+            }
+
+            // Load Dynamic Contact Us Details
+            if (settings.contact) {
+                document.getElementById('footer-address').innerText = settings.contact.address || '';
+                document.getElementById('footer-email').innerText = settings.contact.email || '';
+                document.getElementById('footer-phone').innerText = settings.contact.phone || '';
+            }
+
+            // Load Dynamic Social Media Links with High Quality custom color brand icons
+            const socialContainer = document.getElementById('footer-social-links');
+            socialContainer.innerHTML = '';
+            
+            if (settings.social_media) {
+                Object.entries(settings.social_media).forEach(([platform, url]) => {
+                    if (url) {
+                        const li = document.createElement('li');
+                        let iconMarkup = '<i data-lucide="hash" class="w-4 h-4 text-[#FF003C]"></i>';
+                        const lowerPlatform = platform.toLowerCase();
+
+                        if (lowerPlatform.includes('facebook')) {
+                            iconMarkup = '<i data-lucide="facebook" class="w-4 h-4 text-[#1877F2]"></i>';
+                        } else if (lowerPlatform.includes('twitter') || lowerPlatform.includes('x')) {
+                            iconMarkup = '<i data-lucide="twitter" class="w-4 h-4 text-[#1DA1F2]"></i>';
+                        } else if (lowerPlatform.includes('instagram')) {
+                            iconMarkup = '<i data-lucide="instagram" class="w-4 h-4 text-[#E1306C]"></i>';
+                        } else if (lowerPlatform.includes('youtube')) {
+                            iconMarkup = '<i data-lucide="youtube" class="w-4 h-4 text-[#FF0000]"></i>';
+                        } else if (lowerPlatform.includes('telegram')) {
+                            iconMarkup = '<i data-lucide="send" class="w-4 h-4 text-[#0088cc]"></i>';
+                        }
+
+                        li.innerHTML = `
+                            <a class="text-gray-400 hover:text-white transition-colors flex items-center gap-2" target="_blank" href="${url}">
+                                ${iconMarkup}
+                                <span>${platform}</span>
+                            </a>
+                        `;
+                        socialContainer.appendChild(li);
+                    }
+                });
+            }
+
+            // Load Dynamic Swiper Banners
+            const compSwiperWrapper = document.getElementById('competitions-swiper-wrapper');
+            compSwiperWrapper.innerHTML = '';
+            
+            const banners = settings.competition_banner?.banners || [];
+            banners.forEach(b => {
+                const slide = document.createElement('div');
+                slide.className = "swiper-slide !w-[220px] md:!w-[380px] lg:!w-[450px]";
+                slide.innerHTML = `
+                    <div class="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+                        <img referrerpolicy="no-referrer" src="${b.banner_value}" class="w-full h-full object-cover" alt="Competition Banner"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    </div>
+                `;
+                compSwiperWrapper.appendChild(slide);
+            });
+
+            // Initialize Swiper Hero Slider
+            const heroSwiper = new Swiper('.hero-slider', {
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                }
+            });
+
+            // Initialize or update Competitions Slider with Auto-slide every 3.5 seconds
+            if (compSwiper) {
+                compSwiper.destroy();
+            }
+            compSwiper = new Swiper('.competition-slider', {
+                slidesPerView: 'auto',
+                centeredSlides: true,
+                spaceBetween: 20,
+                loop: banners.length > 1,
+                autoplay: banners.length > 1 ? {
+                    delay: 3500,
+                    disableOnInteraction: false,
+                } : false,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                }
+            });
+
+            lucide.createIcons();
+        }
+
+        // Custom Toast Notification Logic
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "flex items-center gap-3 bg-[#15212D] border border-[#FF003C]/30 text-white text-sm font-semibold px-5 py-3.5 rounded-xl shadow-lg shadow-[#FF003C]/10 animate-slide-in transition-all duration-300 pointer-events-auto transform translate-x-12 opacity-0";
+            toast.innerHTML = `
+                <i data-lucide="bell-ring" class="w-5 h-5 text-[#FF003C]"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove('translate-x-12', 'opacity-0');
+            }, 10);
+
+            // Animate Out & Destroy
+            setTimeout(() => {
+                toast.classList.add('translate-x-12', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Dynamic setting for reminders
+        function handleReminderBell(matchName) {
+            userRemindersCount++;
+            const reminderBadge = document.getElementById('stats-upcoming-reminders');
+            if (reminderBadge) {
+                reminderBadge.innerText = userRemindersCount;
+            }
+            showToast(`Reminder set for ${matchName}! We'll notify you.`);
+        }
+
+        function processEventsAndPredictions(data) {
+            const liveMatches = [];
+            const upcomingMatches = [];
+            const now = new Date();
+            const events = data.sports_live?.events || [];
+            
+            events.forEach(event => {
+                const start = new Date(event.eventInfo.startTime);
+                const end = new Date(event.eventInfo.endTime);
+                
+                if (now >= start && now <= end) {
+                    liveMatches.push(event);
+                } else if (now < start) {
+                    upcomingMatches.push(event);
+                }
+            });
+
+            // 1. Render Live Now Matches (Homepage)
+            const liveContainer = document.getElementById('live-matches-grid');
+            liveContainer.innerHTML = '';
+            
+            if (liveMatches.length === 0) {
+                liveContainer.innerHTML = `
+                    <div class="col-span-full py-8 text-center text-gray-400">
+                        No matches are currently broadcasting live right now. Check upcoming list.
+                    </div>
+                `;
+            } else {
+                liveMatches.forEach(match => {
+                    const card = document.createElement('div');
+                    card.className = "group bg-[#15212D] rounded-xl overflow-hidden shadow-lg block cursor-pointer";
+                    const channelsJSON = JSON.stringify(match.channels_data).replace(/"/g, '&quot;');
+                    const matchSlug = `${slugify(match.eventInfo.teamA)}-vs-${slugify(match.eventInfo.teamB)}`;
+                    const playerRoute = `#/sports/live/${match.cat.toLowerCase()}&${matchSlug}`;
+
+                    card.innerHTML = `
+                        <div class="relative aspect-video p-3 w-full overflow-hidden" onclick="navigateToRoute(event, '${playerRoute}')">
+                            <div class="relative w-full h-full bg-[#0B111A] rounded-lg flex items-center justify-center">
+                                <div class="flex items-center gap-6 p-4">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamAFlag}" class="w-16 h-16 object-contain" alt="${match.eventInfo.teamA}"/>
+                                    <span class="text-xl font-bold uppercase tracking-wider text-gray-400">VS</span>
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamBFlag}" class="w-16 h-16 object-contain" alt="${match.eventInfo.teamB}"/>
+                                </div>
+                            </div>
+                            <div class="absolute top-6 left-6 bg-[#FF003C] text-white text-xs font-bold px-2 py-0.5 rounded-sm shadow-sm">Live</div>
+                            <div class="absolute top-6 right-6 bg-[#0B111A]/80 text-white text-xs font-medium px-2 py-0.5 rounded-sm backdrop-blur-sm">${match.cat}</div>
+                        </div>
+                        <div class="px-4 pb-4 pt-1 bg-[#15212D]" onclick="navigateToRoute(event, '${playerRoute}')">
+                            <h3 class="text-white group-hover:text-[#FF003C] transition-colors text-base font-bold line-clamp-1 mb-1">${match.eventInfo.teamA} - ${match.eventInfo.teamB}</h3>
+                            <p class="text-gray-400 text-xs line-clamp-1">${match.title}</p>
+                        </div>
+                    `;
+                    liveContainer.appendChild(card);
+                });
+            }
+
+            // 2. Render Upcoming Matches sorted chronologically (Homepage)
+            const upcomingContainer = document.getElementById('upcoming-matches-grid');
+            upcomingContainer.innerHTML = '';
+
+            // Sort upcoming matches so that closest match starts first
+            upcomingMatches.sort((a, b) => new Date(a.eventInfo.startTime) - new Date(b.eventInfo.startTime));
+
+            if (upcomingMatches.length === 0) {
+                upcomingContainer.innerHTML = `
+                    <div class="col-span-full py-8 text-center text-gray-400">
+                        No upcoming matches listed at this moment.
+                    </div>
+                `;
+            } else {
+                upcomingMatches.forEach((match, idx) => {
+                    const matchDate = new Date(match.eventInfo.startTime);
+                    const formattedDate = matchDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                    const formattedTime = matchDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                    const card = document.createElement('div');
+                    card.className = "flex flex-col items-start p-4 gap-[10px] w-full bg-[#15212D] border border-white/5 rounded-2xl group transition-all duration-500 hover:border-[#FF003C]/30 relative overflow-hidden shadow-2xl";
+                    
+                    card.innerHTML = `
+                        <div class="absolute top-4 right-4 z-10">
+                            <span class="px-3 py-1 bg-[#123026]/90 backdrop-blur text-[#00FF87] text-[10px] font-black uppercase rounded-full tracking-wider border border-[#00FF87]/20">Upcoming</span>
+                        </div>
+                        <div class="flex items-center justify-between w-full mb-4">
+                            <div class="flex flex-wrap gap-2 items-center">
+                                <div class="flex items-center gap-2 pr-2 border-r border-white/10 mr-2">
+                                    <span class="text-xs font-bold text-white uppercase tracking-wider">${match.cat}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between w-full mb-6 mt-2">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamAFlag}" alt="${match.eventInfo.teamA}" class="w-full h-full object-contain"/>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-white font-bold text-[15px] break-words leading-tight">${match.eventInfo.teamA}</h3>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Home</p>
+                                </div>
+                            </div>
+                            <div class="mx-2">
+                                <div class="bg-[#1A2E3D] px-2 py-1 rounded text-[10px] font-black text-gray-400 border border-white/5 uppercase tracking-wider">VS</div>
+                            </div>
+                            <div class="flex items-center gap-4 flex-1 justify-end text-right">
+                                <div class="min-w-0">
+                                    <h3 class="text-white font-bold text-[15px] break-words leading-tight">${match.eventInfo.teamB}</h3>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Away</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamBFlag}" alt="${match.eventInfo.teamB}" class="w-full h-full object-contain"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 -mt-3 mb-4 w-full px-1">
+                            <img referrerpolicy="no-referrer" src="${match.league_logo}" class="w-5 h-5 object-contain" alt="league logo"/>
+                            <span class="text-[15px] font-semibold text-[#00FF87] tracking-wide">${match.title}</span>
+                        </div>
+                        <div class="h-[1px] bg-white/5 w-full mb-4"></div>
+                        <div class="w-full mb-4 flex items-center justify-between gap-4 bg-white/5 border border-white/5 p-3.5 rounded-xl">
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="calendar" class="w-[18px] h-[18px] text-[#00FF87]"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-white font-bold text-sm leading-none">${formattedDate}</span>
+                                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Match Day</span>
+                                </div>
+                            </div>
+                            <div class="h-6 w-[1px] bg-white/10 shrink-0"></div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="clock" class="w-[18px] h-[18px] text-[#FF003C]"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-white font-bold text-sm leading-none">${formattedTime}</span>
+                                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">BST (GMT+6)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 w-full mt-auto pt-2">
+                            <!-- Countdown inside brackets placed elegantly below 'Coming Soon' and lock icon inside button box -->
+                            <button id="coming-soon-btn-${idx}" data-time="${match.eventInfo.startTime}" class="coming-soon-button flex-1 bg-white/5 hover:bg-white/10 py-3 rounded-xl text-gray-400 hover:text-white font-black text-xs uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-1.5">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="lock" class="w-[14px] h-[14px]"></i> 
+                                    <span>Coming Soon</span>
+                                </div>
+                                <span class="btn-timer-text text-[#00FF87] font-black text-[11px]">[ -- ]</span>
+                            </button>
+                            <button onclick="handleReminderBell('${match.eventInfo.teamA} vs ${match.eventInfo.teamB}')" class="w-10 h-10 bg-[#0B111A] border border-white/5 flex items-center justify-center rounded-xl text-gray-400 hover:text-white hover:border-[#FF003C]/30 transition-all shadow-lg focus:outline-none">
+                                <i data-lucide="bell" class="w-5 h-5 text-gray-400 hover:text-[#FF003C] transition-colors"></i>
+                            </button>
+                        </div>
+                    `;
+                    upcomingContainer.appendChild(card);
+                });
+
+                startCountdownTimer();
+            }
+
+            // 3. Render Match Predictions (Homepage)
+            const predictionsContainer = document.getElementById('predictions-grid');
+            predictionsContainer.innerHTML = '';
+            
+            const predictionEntries = Object.entries(data.Prediction || {});
+            
+            if (predictionEntries.length === 0) {
+                predictionsContainer.innerHTML = `
+                    <div class="col-span-full py-8 text-center text-gray-400">
+                        No predictions are available at this moment.
+                    </div>
+                `;
+            } else {
+                predictionEntries.forEach(([predKey, pred]) => {
+                    if (pred.visible) {
+                        const card = document.createElement('div');
+                        card.className = "w-full bg-[#111827] rounded-2xl p-6 shadow-xl border border-white/5 hover:border-white/10 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between min-h-[380px] group relative overflow-hidden";
+                        const targetRoute = `#/sports/prediction/${predKey}`;
+                        const customTitle = `${pred.teams.t1.name} vs ${pred.teams.t2.name} | ${pred.matchTitle}`;
+
+                        card.innerHTML = `
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,119,255,0.03),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                            <div class="flex flex-col gap-3 relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-[#FF003C] bg-[#FF003C]/10 px-3 py-1 rounded-full uppercase tracking-wider">${pred.category}</span>
+                                    ${pred.predictionSettings.enablePrediction ? `
+                                        <span class="flex items-center gap-1 text-[10px] font-bold text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider">
+                                            <i data-lucide="trophy" class="w-3 h-3 text-amber-500"></i>Active Prediction
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <div>
+                                    <h2 class="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-[#0077FF] transition-colors line-clamp-2">${customTitle}</h2>
+                                    <p class="text-gray-400 text-xs mt-1 font-medium tracking-wide">${pred.subtitle}</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-7 items-center justify-center my-6 py-4 px-2 bg-[#0b1220]/40 border border-white/5 rounded-xl relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
+                                <div class="col-span-3 flex flex-col items-center gap-2">
+                                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/5 p-2.5 border border-white/10 flex items-center justify-center shadow-md">
+                                        <img referrerpolicy="no-referrer" src="${pred.teams.t1.logo}" alt="${pred.teams.t1.name}" class="w-full h-full object-contain"/>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider text-center line-clamp-1 max-w-full">${pred.teams.t1.name}</span>
+                                </div>
+                                <div class="col-span-1 flex flex-col items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-[#111827] border border-white/5 flex items-center justify-center shadow-inner">
+                                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">VS</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-3 flex flex-col items-center gap-2">
+                                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/5 p-2.5 border border-white/10 flex items-center justify-center shadow-md">
+                                        <img referrerpolicy="no-referrer" src="${pred.teams.t2.logo}" alt="${pred.teams.t2.name}" class="w-full h-full object-contain"/>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider text-center line-clamp-1 max-w-full">${pred.teams.t2.name}</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <button onclick="navigateToRoute(event, '${targetRoute}')" class="w-full bg-[#0077FF] hover:bg-[#0066DD] text-white text-xs sm:text-sm font-bold uppercase tracking-widest py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_14px_rgba(0,119,255,0.25)] focus:outline-none">
+                                    <span>Get Prediction</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        `;
+                        predictionsContainer.appendChild(card);
+                    }
+                });
+            }
+
+            lucide.createIcons();
+        }
+
+        // Live Page Category Pills and Cards Dynamic Render Engine
+        function renderLiveBroadcastsPage() {
+            if (!globalData) return;
+            const liveMatches = [];
+            const now = new Date();
+            const events = globalData.sports_live?.events || [];
+            
+            events.forEach(event => {
+                const start = new Date(event.eventInfo.startTime);
+                const end = new Date(event.eventInfo.endTime);
+                if (now >= start && now <= end) {
+                    liveMatches.push(event);
+                }
+            });
+
+            // Set badge active matches count
+            document.getElementById('live-matches-count-badge').innerText = `${liveMatches.length} ${liveMatches.length === 1 ? 'Match' : 'Matches'} Live`;
+
+            // Render filter pills (Hardcoded full home categories list as requested)
+            const pillsBox = document.getElementById('live-category-pills');
+            pillsBox.innerHTML = '';
+            ALL_GLOBAL_CATEGORIES.forEach(cat => {
+                const searchLabel = cat === "ALL" ? "ALL LIVE" : cat;
+                const active = currentLiveCategory === searchLabel;
+                const btn = document.createElement('button');
+                btn.className = `px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap focus:outline-none ${active ? 'bg-[#FF003C] text-white' : 'bg-[#15212D] text-gray-400 hover:text-white border border-white/5'}`;
+                btn.innerText = searchLabel;
+                btn.onclick = () => {
+                    currentLiveCategory = searchLabel;
+                    renderLiveBroadcastsPage();
+                };
+                pillsBox.appendChild(btn);
+            });
+
+            // Filter match list and render
+            const filteredMatches = liveMatches.filter(m => {
+                if (currentLiveCategory === "ALL LIVE") return true;
+                return m.cat.toUpperCase() === currentLiveCategory;
+            });
+
+            const cardsGrid = document.getElementById('live-view-cards-grid');
+            cardsGrid.innerHTML = '';
+
+            if (filteredMatches.length === 0) {
+                cardsGrid.className = "block w-full py-12 text-center";
+                cardsGrid.innerHTML = `
+                    <div class="max-w-md mx-auto flex flex-col items-center justify-center gap-4 text-gray-400 p-8 bg-[#111827] rounded-2xl border border-white/5">
+                        <i data-lucide="video-off" class="w-12 h-12 text-gray-500 animate-pulse"></i>
+                        <h3 class="text-lg font-black text-white uppercase tracking-wide">No Live Events</h3>
+                        <p class="text-sm text-gray-400">There are no live broadcasts currently active in this category.</p>
+                        <button onclick="currentLiveCategory='ALL LIVE'; renderLiveBroadcastsPage();" class="mt-2 px-5 py-2.5 bg-white/5 text-xs text-white hover:bg-white/10 border border-white/10 font-bold uppercase tracking-wider rounded-lg transition-all">View All Categories</button>
+                    </div>
+                `;
+            } else {
+                cardsGrid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
+                filteredMatches.forEach(match => {
+                    const card = document.createElement('div');
+                    card.className = "group bg-[#15212D] rounded-xl overflow-hidden shadow-lg block cursor-pointer";
+                    const channelsJSON = JSON.stringify(match.channels_data).replace(/"/g, '&quot;');
+                    const matchSlug = `${slugify(match.eventInfo.teamA)}-vs-${slugify(match.eventInfo.teamB)}`;
+                    const playerRoute = `#/sports/live/${match.cat.toLowerCase()}&${matchSlug}`;
+
+                    card.innerHTML = `
+                        <div class="relative aspect-video p-3 w-full overflow-hidden" onclick="navigateToRoute(event, '${playerRoute}')">
+                            <div class="relative w-full h-full bg-[#0B111A] rounded-lg flex items-center justify-center">
+                                <div class="flex items-center gap-6 p-4">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamAFlag}" class="w-16 h-16 object-contain" alt="${match.eventInfo.teamA}"/>
+                                    <span class="text-xl font-bold uppercase tracking-wider text-gray-400">VS</span>
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamBFlag}" class="w-16 h-16 object-contain" alt="${match.eventInfo.teamB}"/>
+                                </div>
+                            </div>
+                            <div class="absolute top-6 left-6 bg-[#FF003C] text-white text-xs font-bold px-2 py-0.5 rounded-sm shadow-sm">Live</div>
+                            <div class="absolute top-6 right-6 bg-[#0B111A]/80 text-white text-xs font-medium px-2 py-0.5 rounded-sm backdrop-blur-sm">${match.cat}</div>
+                        </div>
+                        <div class="px-4 pb-4 pt-1 bg-[#15212D]" onclick="navigateToRoute(event, '${playerRoute}')">
+                            <h3 class="text-white group-hover:text-[#FF003C] transition-colors text-base font-bold line-clamp-1 mb-1">${match.eventInfo.teamA} - ${match.eventInfo.teamB}</h3>
+                            <p class="text-gray-400 text-xs line-clamp-1">${match.title}</p>
+                        </div>
+                    `;
+                    cardsGrid.appendChild(card);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // Upcoming Page Category Pills and Cards Render Engine
+        function renderUpcomingBroadcastsPage() {
+            if (!globalData) return;
+            const upcomingMatches = [];
+            const now = new Date();
+            const events = globalData.sports_live?.events || [];
+            
+            events.forEach(event => {
+                const start = new Date(event.eventInfo.startTime);
+                if (now < start) {
+                    upcomingMatches.push(event);
+                }
+            });
+
+            // Sort upcoming matches chronologically
+            upcomingMatches.sort((a, b) => new Date(a.eventInfo.startTime) - new Date(b.eventInfo.startTime));
+
+            // Set Stats
+            document.getElementById('stats-upcoming-count').innerText = upcomingMatches.length;
+            document.getElementById('stats-upcoming-reminders').innerText = userRemindersCount;
+            document.getElementById('stats-upcoming-cats').innerText = ALL_GLOBAL_CATEGORIES.length - 1;
+
+            // Render filters (Hardcoded full home categories list as requested)
+            const pillsBox = document.getElementById('upcoming-category-pills');
+            pillsBox.innerHTML = '';
+            ALL_GLOBAL_CATEGORIES.forEach(cat => {
+                const searchLabel = cat === "ALL" ? "ALL SPORTS" : cat;
+                const active = currentUpcomingCategory === searchLabel;
+                const btn = document.createElement('button');
+                btn.className = `px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap focus:outline-none ${active ? 'bg-[#FF003C] text-white' : 'bg-[#15212D] text-gray-400 hover:text-white border border-white/5'}`;
+                btn.innerText = searchLabel;
+                btn.onclick = () => {
+                    currentUpcomingCategory = searchLabel;
+                    renderUpcomingBroadcastsPage();
+                };
+                pillsBox.appendChild(btn);
+            });
+
+            // Filter match list and render
+            const filteredMatches = upcomingMatches.filter(m => {
+                if (currentUpcomingCategory === "ALL SPORTS") return true;
+                return m.cat.toUpperCase() === currentUpcomingCategory;
+            });
+
+            const cardsGrid = document.getElementById('upcoming-view-cards-grid');
+            cardsGrid.innerHTML = '';
+
+            if (filteredMatches.length === 0) {
+                cardsGrid.className = "block w-full py-12 text-center";
+                cardsGrid.innerHTML = `
+                    <div class="max-w-md mx-auto flex flex-col items-center justify-center gap-4 text-gray-400 p-8 bg-[#111827] rounded-2xl border border-white/5">
+                        <i data-lucide="calendar-off" class="w-12 h-12 text-gray-500 animate-pulse"></i>
+                        <h3 class="text-lg font-black text-white uppercase tracking-wide">No Upcoming Matches</h3>
+                        <p class="text-sm text-gray-400">There are no upcoming scheduled events in this category.</p>
+                        <button onclick="currentUpcomingCategory='ALL SPORTS'; renderUpcomingBroadcastsPage();" class="mt-2 px-5 py-2.5 bg-white/5 text-xs text-white hover:bg-white/10 border border-white/10 font-bold uppercase tracking-wider rounded-lg transition-all">View All Categories</button>
+                    </div>
+                `;
+            } else {
+                cardsGrid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+                filteredMatches.forEach((match, idx) => {
+                    const matchDate = new Date(match.eventInfo.startTime);
+                    const formattedDate = matchDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                    const formattedTime = matchDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                    const card = document.createElement('div');
+                    card.className = "flex flex-col items-start p-4 gap-[10px] w-full bg-[#15212D] border border-white/5 rounded-2xl group transition-all duration-500 hover:border-[#FF003C]/30 relative overflow-hidden shadow-2xl";
+                    card.innerHTML = `
+                        <div class="absolute top-4 right-4 z-10">
+                            <span class="px-3 py-1 bg-[#123026]/90 backdrop-blur text-[#00FF87] text-[10px] font-black uppercase rounded-full tracking-wider border border-[#00FF87]/20">Upcoming</span>
+                        </div>
+                        <div class="flex items-center justify-between w-full mb-4">
+                            <div class="flex flex-wrap gap-2 items-center">
+                                <div class="flex items-center gap-2 pr-2 border-r border-white/10 mr-2">
+                                    <span class="text-xs font-bold text-white uppercase tracking-wider">${match.cat}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between w-full mb-6 mt-2">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamAFlag}" alt="${match.eventInfo.teamA}" class="w-full h-full object-contain"/>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-white font-bold text-[15px] break-words leading-tight">${match.eventInfo.teamA}</h3>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Home</p>
+                                </div>
+                            </div>
+                            <div class="mx-2">
+                                <div class="bg-[#1A2E3D] px-2 py-1 rounded text-[10px] font-black text-gray-400 border border-white/5 uppercase tracking-wider">VS</div>
+                            </div>
+                            <div class="flex items-center gap-4 flex-1 justify-end text-right">
+                                <div class="min-w-0">
+                                    <h3 class="text-white font-bold text-[15px] break-words leading-tight">${match.eventInfo.teamB}</h3>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Away</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamBFlag}" alt="${match.eventInfo.teamB}" class="w-full h-full object-contain"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 -mt-3 mb-4 w-full px-1">
+                            <img referrerpolicy="no-referrer" src="${match.league_logo}" class="w-5 h-5 object-contain" alt="league logo"/>
+                            <span class="text-[15px] font-semibold text-[#00FF87] tracking-wide">${match.title}</span>
+                        </div>
+                        <div class="h-[1px] bg-white/5 w-full mb-4"></div>
+                        <div class="w-full mb-4 flex items-center justify-between gap-4 bg-white/5 border border-white/5 p-3.5 rounded-xl">
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="calendar" class="w-[18px] h-[18px] text-[#00FF87]"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-white font-bold text-sm leading-none">${formattedDate}</span>
+                                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Match Day</span>
+                                </div>
+                            </div>
+                            <div class="h-6 w-[1px] bg-white/10 shrink-0"></div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="clock" class="w-[18px] h-[18px] text-[#FF003C]"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-white font-bold text-sm leading-none">${formattedTime}</span>
+                                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">BST (GMT+6)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 w-full mt-auto pt-2">
+                            <!-- Countdown inside brackets placed elegantly below 'Coming Soon' and lock icon inside button box -->
+                            <button id="upcoming-view-btn-${idx}" data-time="${match.eventInfo.startTime}" class="coming-soon-button flex-1 bg-white/5 hover:bg-white/10 py-3 rounded-xl text-gray-400 hover:text-white font-black text-xs uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-1.5">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="lock" class="w-[14px] h-[14px]"></i> 
+                                    <span>Coming Soon</span>
+                                </div>
+                                <span class="btn-timer-text text-[#00FF87] font-black text-[11px]">[ -- ]</span>
+                            </button>
+                            <button onclick="handleReminderBell('${match.eventInfo.teamA} vs ${match.eventInfo.teamB}')" class="w-10 h-10 bg-[#0B111A] border border-white/5 flex items-center justify-center rounded-xl text-gray-400 hover:text-white hover:border-[#FF003C]/30 transition-all shadow-lg focus:outline-none">
+                                <i data-lucide="bell" class="w-5 h-5 text-gray-400 hover:text-[#FF003C] transition-colors"></i>
+                            </button>
+                        </div>
+                    `;
+                    cardsGrid.appendChild(card);
+                });
+                startCountdownTimer();
+            }
+            lucide.createIcons();
+        }
+
+        // Predictions Page Category Pills and Cards Render Engine
+        function renderPredictionsPage() {
+            if (!globalData) return;
+            const predictions = Object.values(globalData.Prediction || {});
+
+            // Render Filter Buttons (Hardcoded full home categories list as requested)
+            const pillsBox = document.getElementById('prediction-category-pills');
+            pillsBox.innerHTML = '';
+            ALL_GLOBAL_CATEGORIES.forEach(cat => {
+                const searchLabel = cat === "ALL" ? "ALL PREDICTIONS" : cat;
+                const active = currentPredictionCategory === searchLabel;
+                const btn = document.createElement('button');
+                btn.className = `px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap focus:outline-none ${active ? 'bg-[#FF003C] text-white' : 'bg-[#15212D] text-gray-400 hover:text-white border border-white/5'}`;
+                btn.innerText = searchLabel;
+                btn.onclick = () => {
+                    currentPredictionCategory = searchLabel;
+                    renderPredictionsPage();
+                };
+                pillsBox.appendChild(btn);
+            });
+
+            // Filter match list and render
+            const filteredPredictions = predictions.filter(p => {
+                if (currentPredictionCategory === "ALL PREDICTIONS") return true;
+                return p.category.toUpperCase() === currentPredictionCategory;
+            });
+
+            const cardsGrid = document.getElementById('prediction-view-cards-grid');
+            cardsGrid.innerHTML = '';
+
+            const predictionEntries = Object.entries(globalData.Prediction || {});
+
+            if (filteredPredictions.length === 0) {
+                cardsGrid.className = "block w-full py-12 text-center";
+                cardsGrid.innerHTML = `
+                    <div class="max-w-md mx-auto flex flex-col items-center justify-center gap-4 text-gray-400 p-8 bg-[#111827] rounded-2xl border border-white/5">
+                        <i data-lucide="file-warning" class="w-12 h-12 text-gray-500 animate-pulse"></i>
+                        <h3 class="text-lg font-black text-white uppercase tracking-wide">No Predictions</h3>
+                        <p class="text-sm text-gray-400">There are no match analytical insights in this category.</p>
+                        <button onclick="currentPredictionCategory='ALL PREDICTIONS'; renderPredictionsPage();" class="mt-2 px-5 py-2.5 bg-white/5 text-xs text-white hover:bg-white/10 border border-white/10 font-bold uppercase tracking-wider rounded-lg transition-all">View All Categories</button>
+                    </div>
+                `;
+            } else {
+                cardsGrid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+                predictionEntries.forEach(([predKey, pred]) => {
+                    if (pred.visible && (currentPredictionCategory === "ALL PREDICTIONS" || pred.category.toUpperCase() === currentPredictionCategory)) {
+                        const card = document.createElement('div');
+                        card.className = "w-full bg-[#111827] rounded-2xl p-6 shadow-xl border border-white/5 hover:border-white/10 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between min-h-[380px] group relative overflow-hidden";
+                        const targetRoute = `#/sports/prediction/${predKey}`;
+                        const customTitle = `${pred.teams.t1.name} vs ${pred.teams.t2.name} | ${pred.matchTitle}`;
+
+                        card.innerHTML = `
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,119,255,0.03),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                            <div class="flex flex-col gap-3 relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-[#FF003C] bg-[#FF003C]/10 px-3 py-1 rounded-full uppercase tracking-wider">${pred.category}</span>
+                                    ${pred.predictionSettings.enablePrediction ? `
+                                        <span class="flex items-center gap-1 text-[10px] font-bold text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider">
+                                            <i data-lucide="trophy" class="w-3 h-3 text-amber-500"></i>Active Prediction
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <div>
+                                    <h2 class="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-[#0077FF] transition-colors line-clamp-2">${customTitle}</h2>
+                                    <p class="text-gray-400 text-xs mt-1 font-medium tracking-wide">${pred.subtitle}</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-7 items-center justify-center my-6 py-4 px-2 bg-[#0b1220]/40 border border-white/5 rounded-xl relative z-10" onclick="navigateToRoute(event, '${targetRoute}')">
+                                <div class="col-span-3 flex flex-col items-center gap-2">
+                                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/5 p-2.5 border border-white/10 flex items-center justify-center shadow-md">
+                                        <img referrerpolicy="no-referrer" src="${pred.teams.t1.logo}" alt="${pred.teams.t1.name}" class="w-full h-full object-contain"/>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider text-center line-clamp-1 max-w-full">${pred.teams.t1.name}</span>
+                                </div>
+                                <div class="col-span-1 flex flex-col items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-[#111827] border border-white/5 flex items-center justify-center shadow-inner">
+                                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">VS</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-3 flex flex-col items-center gap-2">
+                                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/5 p-2.5 border border-white/10 flex items-center justify-center shadow-md">
+                                        <img referrerpolicy="no-referrer" src="${pred.teams.t2.logo}" alt="${pred.teams.t2.name}" class="w-full h-full object-contain"/>
+                                    </div>
+                                    <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider text-center line-clamp-1 max-w-full">${pred.teams.t2.name}</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <button onclick="navigateToRoute(event, '${targetRoute}')" class="w-full bg-[#0077FF] hover:bg-[#0066DD] text-white text-xs sm:text-sm font-bold uppercase tracking-widest py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_14px_rgba(0,119,255,0.25)] focus:outline-none">
+                                    <span>Get Prediction</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        `;
+                        cardsGrid.appendChild(card);
+                    }
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // Dynamic Sport Category Details Page Generator Engine
+        function renderSportDetailsPage(sportKey) {
+            const sportInfo = sportsLookup[sportKey];
+            if (!sportInfo) return;
+
+            // Generate header card content
+            const headerContainer = document.getElementById('sport-details-header-content');
+            
+            // Count matching active live and upcoming events
+            const now = new Date();
+            const liveMatches = [];
+            const upcomingMatches = [];
+            
+            if (globalData && globalData.sports_live?.events) {
+                globalData.sports_live.events.forEach(event => {
+                    if (event.cat && event.cat.toLowerCase() === sportInfo.catKey.toLowerCase()) {
+                        const start = new Date(event.eventInfo.startTime);
+                        const end = new Date(event.eventInfo.endTime);
+                        if (now >= start && now <= end) {
+                            liveMatches.push(event);
+                        } else if (now < start) {
+                            upcomingMatches.push(event);
+                        }
+                    }
+                });
+            }
+
+            headerContainer.innerHTML = `
+                <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center p-3 shrink-0" style="background-color: ${sportInfo.color}">
+                    <img referrerpolicy="no-referrer" src="${sportInfo.img}" class="w-full h-full object-contain filter drop-shadow-md" alt="${sportInfo.name}"/>
+                </div>
+                <div>
+                    <h1 class="text-3xl md:text-5xl font-black uppercase tracking-wide text-white leading-none">${sportInfo.name}</h1>
+                    <div class="flex flex-wrap items-center gap-2 mt-2">
+                        <span class="px-2.5 py-0.5 bg-[#FF003C] text-white text-[10px] font-black rounded-full uppercase tracking-wider">${liveMatches.length} Live Now</span>
+                        <span class="text-xs text-gray-400 font-medium">Premium Analysis & Streams</span>
+                    </div>
+                </div>
+            `;
+
+            // Render live match list
+            const liveGrid = document.getElementById('sport-details-live-grid');
+            liveGrid.innerHTML = '';
+            
+            // Reset sections to prevent display bugs
+            liveGrid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
+            const upcomingGrid = document.getElementById('sport-details-upcoming-grid');
+            upcomingGrid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+            upcomingGrid.innerHTML = '';
+
+            // Handle clean display when category completely lacks live matches
+            if (liveMatches.length === 0) {
+                liveGrid.className = "block w-full py-6 text-center";
+                liveGrid.innerHTML = `
+                    <div class="flex flex-col items-center justify-center gap-2 text-gray-500 py-6">
+                        <i data-lucide="video-off" class="w-10 h-10"></i>
+                        <span class="text-sm font-semibold">No active live events in this category.</span>
+                    </div>
+                `;
+            } else {
+                liveMatches.forEach(match => {
+                    const card = document.createElement('div');
+                    card.className = "group bg-[#15212D] rounded-xl overflow-hidden shadow-lg block cursor-pointer";
+                    const channelsJSON = JSON.stringify(match.channels_data).replace(/"/g, '&quot;');
+                    const matchSlug = `${slugify(match.eventInfo.teamA)}-vs-${slugify(match.eventInfo.teamB)}`;
+                    const playerRoute = `#/sports/live/${match.cat.toLowerCase()}&${matchSlug}`;
+
+                    card.innerHTML = `
+                        <div class="relative aspect-video p-3 w-full overflow-hidden" onclick="navigateToRoute(event, '${playerRoute}')">
+                            <div class="relative w-full h-full bg-[#0B111A] rounded-lg flex items-center justify-center">
+                                <div class="flex items-center gap-6 p-4">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamAFlag}" class="w-16 h-16 object-contain" alt="${match.eventInfo.teamA}"/>
+                                    <span class="text-xl font-bold uppercase tracking-wider text-gray-400">VS</span>
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamBFlag}" class="w-16 h-16 object-contain" alt="${match.eventInfo.teamB}"/>
+                                </div>
+                            </div>
+                            <div class="absolute top-6 left-6 bg-[#FF003C] text-white text-xs font-bold px-2 py-0.5 rounded-sm shadow-sm">Live</div>
+                            <div class="absolute top-6 right-6 bg-[#0B111A]/80 text-white text-xs font-medium px-2 py-0.5 rounded-sm backdrop-blur-sm">${match.cat}</div>
+                        </div>
+                        <div class="px-4 pb-4 pt-1 bg-[#15212D]" onclick="navigateToRoute(event, '${playerRoute}')">
+                            <h3 class="text-white group-hover:text-[#FF003C] transition-colors text-base font-bold line-clamp-1 mb-1">${match.eventInfo.teamA} - ${match.eventInfo.teamB}</h3>
+                            <p class="text-gray-400 text-xs line-clamp-1">${match.title}</p>
+                        </div>
+                    `;
+                    liveGrid.appendChild(card);
+                });
+            }
+
+            // Render upcoming match list (sorted chronologically)
+            upcomingMatches.sort((a, b) => new Date(a.eventInfo.startTime) - new Date(b.eventInfo.startTime));
+
+            if (upcomingMatches.length === 0) {
+                upcomingGrid.className = "block w-full py-6 text-center";
+                upcomingGrid.innerHTML = `
+                    <div class="flex flex-col items-center justify-center gap-2 text-gray-500 py-6">
+                        <i data-lucide="calendar-off" class="w-10 h-10"></i>
+                        <span class="text-sm font-semibold">No upcoming scheduled matches in this category.</span>
+                    </div>
+                `;
+            } else {
+                upcomingMatches.forEach((match, idx) => {
+                    const matchDate = new Date(match.eventInfo.startTime);
+                    const formattedDate = matchDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                    const formattedTime = matchDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                    const card = document.createElement('div');
+                    card.className = "flex flex-col items-start p-4 gap-[10px] w-full bg-[#15212D] border border-white/5 rounded-2xl group transition-all duration-500 hover:border-[#FF003C]/30 relative overflow-hidden shadow-2xl";
+                    card.innerHTML = `
+                        <div class="absolute top-4 right-4 z-10">
+                            <span class="px-3 py-1 bg-[#123026]/90 backdrop-blur text-[#00FF87] text-[10px] font-black uppercase rounded-full tracking-wider border border-[#00FF87]/20">Upcoming</span>
+                        </div>
+                        <div class="flex items-center justify-between w-full mb-4">
+                            <div class="flex flex-wrap gap-2 items-center">
+                                <div class="flex items-center gap-2 pr-2 border-r border-white/10 mr-2">
+                                    <span class="text-xs font-bold text-white uppercase tracking-wider">${match.cat}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between w-full mb-6 mt-2">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamAFlag}" alt="${match.eventInfo.teamA}" class="w-full h-full object-contain"/>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-white font-bold text-[15px] break-words leading-tight">${match.eventInfo.teamA}</h3>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Home</p>
+                                </div>
+                            </div>
+                            <div class="mx-2">
+                                <div class="bg-[#1A2E3D] px-2 py-1 rounded text-[10px] font-black text-gray-400 border border-white/5 uppercase tracking-wider">VS</div>
+                            </div>
+                            <div class="flex items-center gap-4 flex-1 justify-end text-right">
+                                <div class="min-w-0">
+                                    <h3 class="text-white font-bold text-[15px] break-words leading-tight">${match.eventInfo.teamB}</h3>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Away</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamBFlag}" alt="${match.eventInfo.teamB}" class="w-full h-full object-contain"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 -mt-3 mb-4 w-full px-1">
+                            <img referrerpolicy="no-referrer" src="${match.league_logo}" class="w-5 h-5 object-contain" alt="league logo"/>
+                            <span class="text-[15px] font-semibold text-[#00FF87] tracking-wide">${match.title}</span>
+                        </div>
+                        <div class="h-[1px] bg-white/5 w-full mb-4"></div>
+                        <div class="w-full mb-4 flex items-center justify-between gap-4 bg-white/5 border border-white/5 p-3.5 rounded-xl">
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="calendar" class="w-[18px] h-[18px] text-[#00FF87]"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-white font-bold text-sm leading-none">${formattedDate}</span>
+                                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Match Day</span>
+                                </div>
+                            </div>
+                            <div class="h-6 w-[1px] bg-white/10 shrink-0"></div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="clock" class="w-[18px] h-[18px] text-[#FF003C]"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-white font-bold text-sm leading-none">${formattedTime}</span>
+                                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">BST (GMT+6)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 w-full mt-auto pt-2">
+                            <button id="sport-details-view-btn-${idx}" data-time="${match.eventInfo.startTime}" class="coming-soon-button flex-1 bg-white/5 hover:bg-white/10 py-3 rounded-xl text-gray-400 hover:text-white font-black text-xs uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-1.5">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="lock" class="w-[14px] h-[14px]"></i> 
+                                    <span>Coming Soon</span>
+                                </div>
+                                <span class="btn-timer-text text-[#00FF87] font-black text-[11px]">[ -- ]</span>
+                            </button>
+                            <button onclick="handleReminderBell('${match.eventInfo.teamA} vs ${match.eventInfo.teamB}')" class="w-10 h-10 bg-[#0B111A] border border-white/5 flex items-center justify-center rounded-xl text-gray-400 hover:text-white hover:border-[#FF003C]/30 transition-all shadow-lg focus:outline-none">
+                                <i data-lucide="bell" class="w-5 h-5 text-gray-400 hover:text-[#FF003C] transition-colors"></i>
+                            </button>
+                        </div>
+                    `;
+                    upcomingGrid.appendChild(card);
+                });
+                startCountdownTimer();
+            }
+
+            // State-lock bug resolved cleanly without using replaceWith()
+            if (liveMatches.length === 0 && upcomingMatches.length === 0) {
+                document.getElementById('sport-details-content-wrapper').classList.add('hidden');
+                document.getElementById('sport-details-empty-state').classList.remove('hidden');
+            } else {
+                document.getElementById('sport-details-content-wrapper').classList.remove('hidden');
+                document.getElementById('sport-details-empty-state').classList.add('hidden');
+            }
+
+            lucide.createIcons();
+        }
+
+        // Render Page 7 Routed Video Player View
+        function renderVideoPlayerPage(routeParams) {
+            if (!globalData) return;
+            const paramArray = routeParams.split('&');
+            if (paramArray.length < 2) return;
+
+            const targetCategory = paramArray[0].toLowerCase();
+            const targetSlug = paramArray[1].toLowerCase();
+
+            // Locate specific live match in globalData payload
+            let match = null;
+            if (globalData.sports_live?.events) {
+                globalData.sports_live.events.forEach(event => {
+                    const slug = `${slugify(event.eventInfo.teamA)}-vs-${slugify(event.eventInfo.teamB)}`;
+                    if (event.cat.toLowerCase() === targetCategory && slug === targetSlug) {
+                        match = event;
+                    }
+                });
+            }
+
+            const videoBox = document.getElementById('video-player-main-box');
+            const infoContent = document.getElementById('video-player-info-content');
+            const serversList = document.getElementById('video-player-servers-list');
+            const relatedGrid = document.getElementById('video-player-related-grid');
+
+            if (!match) {
+                videoBox.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 gap-2">
+                        <i data-lucide="alert-triangle" class="w-12 h-12 text-[#FF003C]"></i>
+                        <span>Match Stream Offline or Completed.</span>
+                    </div>
+                `;
+                infoContent.innerHTML = '';
+                serversList.innerHTML = '';
+                relatedGrid.innerHTML = '';
+                lucide.createIcons();
+                return;
+            }
+
+            // Load first link in IFrame container directly
+            if (match.channels_data && match.channels_data.length > 0) {
+                videoBox.innerHTML = match.channels_data[0].link;
+            } else {
+                videoBox.innerHTML = `
+                    <div class="w-full h-full flex items-center justify-center text-gray-500">
+                        No active streams found.
+                    </div>
+                `;
+            }
+
+            // Load Server switches
+            serversList.innerHTML = '';
+            if (match.channels_data) {
+                match.channels_data.forEach((chan, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${idx === 0 ? 'bg-[#FF003C] text-white shadow-lg shadow-red-500/10' : 'bg-[#15212D] text-gray-400 hover:text-white border border-white/5'}`;
+                    btn.innerText = chan.name || chan.title || `Server ${idx + 1}`;
+                    btn.onclick = () => {
+                        Array.from(serversList.children).forEach(b => {
+                            b.className = 'px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 bg-[#15212D] text-gray-400 hover:text-white border border-white/5';
+                        });
+                        btn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 bg-[#FF003C] text-white shadow-lg shadow-red-500/10';
+                        videoBox.innerHTML = chan.link;
+                    };
+                    serversList.appendChild(btn);
+                });
+            }
+
+            // Set Details Card Info Content matching Screen 3 layout
+            const matchDate = new Date(match.eventInfo.startTime);
+            const formattedDateTime = `${matchDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })} • ${matchDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} GMT+6`;
+            
+            infoContent.innerHTML = `
+                <div class="flex flex-col gap-2">
+                    <span class="px-2.5 py-0.5 bg-[#FF003C] text-white text-[10px] font-black rounded uppercase tracking-wider self-start animate-pulse">Live</span>
+                    <h2 class="text-white text-xl md:text-2xl font-black uppercase tracking-wide leading-tight">${match.eventInfo.teamA} - ${match.eventInfo.teamB}</h2>
+                    <p class="text-gray-400 text-xs md:text-sm font-medium">${match.title} • ${formattedDateTime}</p>
+                </div>
+                <!-- Logos container layout matching Screen 3 bottom info card -->
+                <div class="flex items-center gap-6 bg-[#0B111A]/60 px-6 py-3 rounded-2xl border border-white/5">
+                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamAFlag}" class="w-12 h-12 object-contain" alt="${match.eventInfo.teamA}"/>
+                    <span class="text-xs font-black italic text-[#FF003C] uppercase tracking-wider">VS</span>
+                    <img referrerpolicy="no-referrer" src="${match.eventInfo.teamBFlag}" class="w-12 h-12 object-contain" alt="${match.eventInfo.teamB}"/>
+                </div>
+            `;
+
+            // Related active live match cards generator
+            relatedGrid.innerHTML = '';
+            let relatedMatchesCount = 0;
+
+            if (globalData.sports_live?.events) {
+                globalData.sports_live.events.forEach(event => {
+                    const now = new Date();
+                    const start = new Date(event.eventInfo.startTime);
+                    const end = new Date(event.eventInfo.endTime);
+
+                    if (now >= start && now <= end && event.id !== match.id) {
+                        relatedMatchesCount++;
+                        const card = document.createElement('div');
+                        card.className = "group bg-[#15212D] rounded-xl overflow-hidden shadow-lg block cursor-pointer";
+                        const matchSlug = `${slugify(event.eventInfo.teamA)}-vs-${slugify(event.eventInfo.teamB)}`;
+                        const playerRoute = `#/sports/live/${event.cat.toLowerCase()}&${matchSlug}`;
+
+                        card.innerHTML = `
+                            <div class="relative aspect-video p-3 w-full overflow-hidden" onclick="navigateToRoute(event, '${playerRoute}')">
+                                <div class="relative w-full h-full bg-[#0B111A] rounded-lg flex items-center justify-center">
+                                    <div class="flex items-center gap-6 p-4">
+                                        <img referrerpolicy="no-referrer" src="${event.eventInfo.teamAFlag}" class="w-16 h-16 object-contain" alt="${event.eventInfo.teamA}"/>
+                                        <span class="text-xl font-bold uppercase tracking-wider text-gray-400">VS</span>
+                                        <img referrerpolicy="no-referrer" src="${event.eventInfo.teamBFlag}" class="w-16 h-16 object-contain" alt="${event.eventInfo.teamB}"/>
+                                    </div>
+                                </div>
+                                <div class="absolute top-6 left-6 bg-[#FF003C] text-white text-xs font-bold px-2 py-0.5 rounded-sm shadow-sm">Live</div>
+                                <div class="absolute top-6 right-6 bg-[#0B111A]/80 text-white text-xs font-medium px-2 py-0.5 rounded-sm backdrop-blur-sm">${event.cat}</div>
+                            </div>
+                            <div class="px-4 pb-4 pt-1 bg-[#15212D]" onclick="navigateToRoute(event, '${playerRoute}')">
+                                <h3 class="text-white group-hover:text-[#FF003C] transition-colors text-base font-bold line-clamp-1 mb-1">${event.eventInfo.teamA} - ${event.eventInfo.teamB}</h3>
+                                <p class="text-gray-400 text-xs line-clamp-1">${event.title}</p>
+                            </div>
+                        `;
+                        relatedGrid.appendChild(card);
+                    }
+                });
+            }
+
+            if (relatedMatchesCount === 0) {
+                relatedGrid.className = "block w-full py-4 text-center";
+                relatedGrid.innerHTML = `<span class="text-sm text-gray-500 font-semibold">No other active matches playing currently.</span>`;
+            } else {
+                relatedGrid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
+            }
+
+            lucide.createIcons();
+        }
+
+        // Render Page 8 Dedicated Predictions Page
+        function renderPredictionDetailsPage(predKey) {
+            if (!globalData || !globalData.Prediction) return;
+            const pred = globalData.Prediction[predKey];
+            if (!pred) return;
+
+            // Load Header Details
+            document.getElementById('pred-details-category').innerText = pred.category;
+            document.getElementById('pred-details-match-title').innerText = `${pred.teams.t1.name} vs ${pred.teams.t2.name} | ${pred.matchTitle}`;
+            
+            // Set Logos
+            document.getElementById('pred-details-t1-logo').src = pred.teams.t1.logo;
+            document.getElementById('pred-details-t1-name').innerText = pred.teams.t1.name;
+            document.getElementById('pred-details-table-t1-name').innerText = pred.teams.t1.name;
+
+            document.getElementById('pred-details-t2-logo').src = pred.teams.t2.logo;
+            document.getElementById('pred-details-t2-name').innerText = pred.teams.t2.name;
+            document.getElementById('pred-details-table-t2-name').innerText = pred.teams.t2.name;
+
+            // Render Metrics Rows with custom color progress rating dots matching Screen 1 Table style
+            const tableBody = document.getElementById('pred-details-table-body');
+            tableBody.innerHTML = '';
+            
+            if (pred.analysis.metrics) {
+                pred.analysis.metrics.forEach(m => {
+                    const row = document.createElement('tr');
+                    row.className = "border-b border-white/5";
+                    row.innerHTML = `
+                        <td class="py-4 font-bold text-gray-300 uppercase text-xs tracking-wider">${m.label}</td>
+                        <td class="py-4 text-center">${generateRatingDots(m.t1.status, m.t1.value)}</td>
+                        <td class="py-4 text-center">${generateRatingDots(m.t2.status, m.t2.value)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Expert Analysis & Pointer description paragraphs
+            document.getElementById('pred-details-description').innerText = pred.analysis.description || 'No analytical description available for this match.';
+
+            // Render Bullet Tips Points List
+            const pointersUl = document.getElementById('pred-details-pointers');
+            pointersUl.innerHTML = '';
+            if (pred.analysis.bulletPoints) {
+                pred.analysis.bulletPoints.forEach(pt => {
+                    const li = document.createElement('li');
+                    li.className = "flex items-start gap-2 text-gray-300";
+                    li.innerHTML = `
+                        <i data-lucide="check" class="w-4 h-4 text-[#00FF87] shrink-0 mt-0.5"></i>
+                        <span>${pt}</span>
+                    `;
+                    pointersUl.appendChild(li);
+                });
+            }
+
+            // Match Prediction outcome cards box matching Screen 2
+            const outcomesBox = document.getElementById('pred-details-outcomes-container');
+            outcomesBox.innerHTML = '';
+            let outcomesHtml = "";
+
+            if (pred.predictionSettings.options) {
+                pred.predictionSettings.options.forEach(opt => {
+                    outcomesHtml += `
+                        <div class="bg-[#15212D]/80 p-4 border border-white/5 rounded-2xl flex flex-col gap-1.5 shadow-lg">
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${opt.title}</span>
+                            <span class="text-[#00FF87] font-black text-base uppercase tracking-wider">${opt.outcome}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (pred.predictionSettings.scorePredictionText) {
+                outcomesHtml += `
+                    <div class="bg-[#15212D]/80 p-4 border border-white/5 rounded-2xl flex flex-col gap-1.5 shadow-lg">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Possible Score</span>
+                        <span class="text-amber-500 font-black text-base uppercase tracking-wider">${pred.predictionSettings.scorePredictionText}</span>
+                    </div>
+                `;
+            }
+
+            outcomesBox.innerHTML = outcomesHtml;
+            lucide.createIcons();
+        }
+
+        // Countdown Timer Engine (Timer styled below 'Coming Soon' inside brackets with neon green coloring)
+        function startCountdownTimer() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            countdownInterval = setInterval(() => {
+                const countdownButtons = document.querySelectorAll('.coming-soon-button');
+                const now = new Date().getTime();
+
+                countdownButtons.forEach(btn => {
+                    const matchTime = new Date(btn.getAttribute('data-time')).getTime();
+                    const diff = matchTime - now;
+                    const timerTextNode = btn.querySelector('.btn-timer-text');
+                    
+                    if (diff > 0) {
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                        let formattedCountdown = "";
+                        if (days > 0) {
+                            formattedCountdown += `${days}d `;
+                        }
+                        formattedCountdown += `${hours}h ${minutes}m ${seconds}s`;
+
+                        timerTextNode.innerHTML = `[ ${formattedCountdown} ]`;
+                    } else {
+                        timerTextNode.innerHTML = `[ Started ]`;
+                    }
+                });
+            }, 1000);
+        }
+
+        // Direct Iframe Player Modal Logic (No custom library needed!)
+        const videoModal = document.getElementById('video-modal');
+        const iframeHolder = document.getElementById('iframe-box-holder');
+        const modalMatchTitle = document.getElementById('modal-match-title');
+        const modalChannelList = document.getElementById('modal-channel-list');
+
+        function openPlayerModal(matchTitle, channels) {
+            activeMatchChannels = channels;
+            modalMatchTitle.innerText = matchTitle;
+            
+            // Build channel list tabs/buttons
+            modalChannelList.innerHTML = '';
+            
+            channels.forEach((chan, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                    idx === 0 
+                        ? 'bg-[#FF003C] text-white' 
+                        : 'bg-[#15212D] text-gray-400 hover:text-white border border-white/5'
+                }`;
+                btn.innerText = chan.name || chan.title || `Stream ${idx + 1}`;
+                
+                // Clicking a stream switches active iframe directly
+                btn.onclick = () => {
+                    // Update Active Styles
+                    Array.from(modalChannelList.children).forEach(b => {
+                        b.className = 'px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 bg-[#15212D] text-gray-400 hover:text-white border border-white/5';
+                    });
+                    btn.className = 'px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 bg-[#FF003C] text-white';
+                    
+                    // Inject clicked iframe
+                    loadIframeSource(chan.link);
+                };
+                modalChannelList.appendChild(btn);
+            });
+
+            // Load first channel automatically
+            if (channels.length > 0) {
+                loadIframeSource(channels[0].link);
+            } else {
+                iframeHolder.innerHTML = `<div class="w-full h-full flex items-center justify-center text-gray-500">No active streams found.</div>`;
+            }
+
+            videoModal.classList.remove('hidden');
+        }
+
+        function loadIframeSource(iframeString) {
+            iframeHolder.innerHTML = '';
+            iframeHolder.innerHTML = iframeString;
+        }
+
+        // Close Video Modal
+        document.getElementById('close-modal-btn').addEventListener('click', () => {
+            videoModal.classList.add('hidden');
+            iframeHolder.innerHTML = ''; // Destroys running stream cleanly
+        });
+
+        // Expert Analysis/Prediction Details Modal Logic
+        const predictionModal = document.getElementById('prediction-modal');
+        const predTitle = document.getElementById('pred-modal-title');
+        const predDesc = document.getElementById('pred-modal-desc');
+        const predMetrics = document.getElementById('pred-modal-metrics');
+        const predBullets = document.getElementById('pred-modal-bullets');
+
+        function openPredictionModal(predData) {
+            predTitle.innerText = `${predData.teams.t1.name} vs ${predData.teams.t2.name}`;
+            predDesc.innerText = predData.analysis.description || "No analytical description available for this match.";
+            
+            // Build Dynamic Progress Bars comparing metrics
+            predMetrics.innerHTML = '';
+            
+            const metrics = predData.analysis.metrics || [];
+            
+            metrics.forEach(m => {
+                const metricRow = document.createElement('div');
+                metricRow.className = "space-y-1";
+                metricRow.innerHTML = `
+                    <div class="flex justify-between text-xs font-bold uppercase tracking-wider">
+                        <span class="text-gray-400">${m.label}</span>
+                        <span>${predData.teams.t1.name} (${m.t1.value}) vs (${m.t2.value}) ${predData.teams.t2.name}</span>
+                    </div>
+                    <!-- Double side dynamic comparison bar -->
+                    <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden flex">
+                        <div style="width: ${(m.t1.value / (m.t1.value + m.t2.value)) * 100}%" class="bg-[#FF003C] h-full"></div>
+                        <div style="width: ${(m.t2.value / (m.t1.value + m.t2.value)) * 100}%" class="bg-gray-600 h-full"></div>
+                    </div>
+                `;
+                predMetrics.appendChild(metricRow);
+            });
+
+            // Build Bullet lists
+            predBullets.innerHTML = '';
+            const bullets = predData.analysis.bulletPoints || [];
+            bullets.forEach(b => {
+                const li = document.createElement('li');
+                li.innerText = b;
+                predBullets.appendChild(li);
+            });
+
+            predictionModal.classList.remove('hidden');
+        }
+
+        // Close Prediction Details Modal
+        document.getElementById('close-pred-btn').addEventListener('click', () => {
+            predictionModal.classList.add('hidden');
+        });
+
+        // Close modals on clicking backdrop
+        window.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                videoModal.classList.add('hidden');
+                iframeHolder.innerHTML = '';
+            }
+            if (e.target === predictionModal) {
+                predictionModal.classList.add('hidden');
+            }
+        });
+
+        // Initialize dynamic data fetch securely using window.onload for flawless Base64 Github Pages execution
+        window.onload = loadTSNData;
+    </script>
+</body>
+</html>
